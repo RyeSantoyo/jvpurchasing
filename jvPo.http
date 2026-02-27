@@ -1,0 +1,6 @@
+@jvPo_HostAddress = http://localhost:5208
+
+GET {{jvPo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
