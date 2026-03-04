@@ -13,7 +13,5 @@ namespace jvPo.Models
         {
         }
 
-        // Define your DbSet properties here
-        // public DbSet<YourEntity> YourEntities { get; set; }
     }
 }
