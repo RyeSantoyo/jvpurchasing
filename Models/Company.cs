@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 namespace jvPo.Models
 {
-    public class Terms
+    public class Company
     {
         public int Id { get; set; }
-        public string Term { get; set; } = string.Empty;
-        public int Days { get; set; }
-
+        public int CompanyCode { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }

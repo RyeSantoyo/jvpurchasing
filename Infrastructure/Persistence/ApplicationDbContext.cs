@@ -13,5 +13,19 @@ namespace jvPo.Models
         {
         }
 
+        public DbSet<Company> Companies { get; set; } = null!;
+        public DbSet<Users> Users { get; set; } = null!;
+        public DbSet<DeliveryAddress> DeliveryAddresses { get; set; } = null!;
+        public DbSet<Terms> Terms { get; set; } = null!;
+        public DbSet<PO> POs { get; set; } = null!;
+        public DbSet<PODetails> PODetails { get; set; } = null!;
+        public DbSet<Suppliers> Suppliers { get; set; } = null!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Configure relationships and constraints here if needed
+        }
     }
 }
