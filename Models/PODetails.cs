@@ -7,9 +7,12 @@ namespace jvPo.Models
 {
     public class PODetails
     {
-    public int Id  { get; set; } 
+    public int Id  { get; set; }
+
+    public Company Company { get; set; } = null!;
     public int CompanyId { get; set; }
     public PO PurchaseOrder { get; set; } = null!;
+    public int POId { get; set; }
     public int Quantity { get; set; }
     public string Unit { get; set; } = string.Empty;
     public string Description { get; set; } =string.Empty;
