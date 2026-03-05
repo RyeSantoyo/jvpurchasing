@@ -1,9 +1,13 @@
+// using jvPo.dbRepo;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddTransient<dbRepo>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -13,30 +17,38 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching",
-    "Sleepy"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+// try
+// {
+//     var repo = app.Services.GetRequiredService<dbRepo>();
+//     var addresses = repo.getAll();
+
+//     if (addresses != null && addresses.Any())
+//     {
+//         Console.WriteLine($"Success! Found {addresses.Count()} records.");
+//         foreach (var addr in addresses)
+//         {
+//             // Print one or two properties to verify data mapping
+//             Console.WriteLine($"Address: {addr.Address}");
+//         }
+//     }
+//     else
+//     {
+//         Console.WriteLine("Connection worked, but the table is empty.");
+//     }
+// }
+// catch (Exception ex)
+// {
+//     // THIS is the part that will tell you if the SQL 2000 server is rejecting you
+//     Console.WriteLine("--- CONNECTION FAILED ---");
+//     Console.WriteLine($"Error Message: {ex.Message}");
+//     Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+// }
+
+
+
+

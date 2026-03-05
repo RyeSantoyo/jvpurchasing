@@ -1,0 +1,2 @@
+This field is used to declare relationship between models.
+Not currenty applicable on this legacy system.
