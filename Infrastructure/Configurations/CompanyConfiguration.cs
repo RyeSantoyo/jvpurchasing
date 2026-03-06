@@ -22,8 +22,6 @@ namespace jvPo.Infrastructure.Configurations
             builder.Property(c => c.Name)
                 .IsRequired()
                 .HasMaxLength(100);
-
-
         }
     }
 }

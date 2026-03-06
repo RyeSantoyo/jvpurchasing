@@ -1,4 +1,6 @@
 // using jvPo.dbRepo;
+using Microsoft.EntityFrameworkCore;
+using jvPo.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddDbContext   <ApplicationDbContext>(ops => ops.UseSqlServer(builder.Configuration.GetConnectionString("DefCon")));
 //builder.Services.AddTransient<dbRepo>();
 var app = builder.Build();
 

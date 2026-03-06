@@ -25,7 +25,18 @@ namespace jvPo.Infrastructure.Configurations
             builder.Property(s => s.SupplierAddress)
                 .IsRequired()
                 .HasMaxLength(200);
-            
+
+            builder.Property(s=> s.ContactPerson)
+                .IsRequired()
+                .HasMaxLength(100);
+            builder.Property(s => s.MobileNo)
+                .IsRequired();
+
+            builder.HasOne(s => s.Terms)
+                .WithMany()
+                .HasForeignKey(s => s.TermsId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

@@ -31,13 +31,14 @@ namespace jvPo.Models
         public int UserId { get; set; }
 
 
-        public string RequestedBy { get; set; } = string.Empty; // Link to User 
+        public string RequestedBy { get; set; } = string.Empty; //Can be anyone
+        public string OrderBy { get; set; } = string.Empty;
         public int RONumber { get; set; } //Request Order
         public DateTime RODate { get; set; } = DateTime.UtcNow;
-        public double TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string Remarks { get; set; } = string.Empty;
-        public string OrderBy { get; set; } = string.Empty;
 
+        public ICollection<PODetails> PODetails { get; set; } = new List<PODetails>();
     }
 
 }
