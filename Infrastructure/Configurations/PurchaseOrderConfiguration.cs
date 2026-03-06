@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace jvPo.Infrastructure.Configurations
 {
-    public class PurchaseOrderConfigutation : IEntityTypeConfiguration<PO>
+    public class PurchaseOrderConfiguration : IEntityTypeConfiguration<PO>
     {
         public void Configure(EntityTypeBuilder<PO> builder)
         {

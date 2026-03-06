@@ -35,8 +35,10 @@ namespace jvPo.Models
         public string OrderBy { get; set; } = string.Empty;
         public int RONumber { get; set; } //Request Order
         public DateTime RODate { get; set; } = DateTime.UtcNow;
-        public double TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string Remarks { get; set; } = string.Empty;
+
+        public ICollection<PODetails> PODetails { get; set; } = new List<PODetails>();
     }
 
 }

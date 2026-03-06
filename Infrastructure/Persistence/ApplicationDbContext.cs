@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using jvPo.Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace jvPo.Models
@@ -25,6 +26,14 @@ namespace jvPo.Models
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CompanyConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(PODetailsConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(PurchaseOrderConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(SupplierConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(UsersConfiguration).Assembly);
+            
             // Configure relationships and constraints here if needed
         }
     }

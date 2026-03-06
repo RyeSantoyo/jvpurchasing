@@ -25,14 +25,15 @@ namespace jvPo.Infrastructure.Configurations
                 .HasMaxLength(200);
             builder.Property(pd => pd.Price)
                 .IsRequired();
-
+            builder.Property(pd=> pd.Total)
+                .IsRequired();
             builder.HasOne(pd => pd.Company)
                 .WithMany()
                 .HasForeignKey(pd => pd.CompanyId)
                 .OnDelete(DeleteBehavior.Cascade);
             
             builder.HasOne(pd => pd.PurchaseOrder)
-            .WithMany()
+            .WithMany(pd=> pd.PODetails)
             .HasForeignKey(pd => pd.POId)
             .OnDelete(DeleteBehavior.Cascade);
         }
