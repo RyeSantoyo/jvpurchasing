@@ -35,7 +35,7 @@ namespace jvPo.Infrastructure.Configurations
             builder.HasOne(s => s.Terms)
                 .WithMany()
                 .HasForeignKey(s => s.TermsId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
     }

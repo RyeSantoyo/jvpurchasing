@@ -30,12 +30,12 @@ namespace jvPo.Infrastructure.Configurations
             builder.HasOne(pd => pd.Company)
                 .WithMany()
                 .HasForeignKey(pd => pd.CompanyId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
             
             builder.HasOne(pd => pd.PurchaseOrder)
             .WithMany(pd=> pd.PODetails)
             .HasForeignKey(pd => pd.POId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
