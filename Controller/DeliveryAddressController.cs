@@ -40,5 +40,36 @@ namespace jvPo.Controller
 
             return Ok(result);
         }
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateDeliveryAddressAsync(int id, DeliveryAddress deliveryAddress)
+        {
+            if(id != deliveryAddress.Id)
+                return BadRequest("ID mismatch.");
+                
+            if(deliveryAddress == null)
+                return BadRequest("Delivery address cannot be null.");
+
+            var result = await _deliveryAddressService.UpdateDeliveryAddressAsync(deliveryAddress);
+
+            if(!result.Success)
+                return BadRequest(result.Message);
+
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDeliveryAddressAsync(int id)
+        {
+            if(id <= 0)
+                return BadRequest("Invalid delivery address ID.");
+
+            var result = await _deliveryAddressService.DeleteDeliveryAddressAsync(id);
+
+            if(!result.Success)
+                return NotFound(result.Message);
+            
+            return Ok(result);
+        }
     }
 }

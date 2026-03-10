@@ -14,6 +14,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<ApplicationDbContext>(ops => ops.UseSqlServer(builder.Configuration.GetConnectionString("DefCon")));
 
 builder.Services.AddScoped<IDeliveryAddress, DeliveryAddressService>();
+builder.Services.AddScoped<ISupplier, SupplierService>();
+
 //builder.Services.AddTransient<dbRepo>();
 var app = builder.Build();
 
