@@ -37,27 +37,27 @@ namespace jvPo.Infrastructure.Configurations
             builder.HasOne(po=> po.Company)
                 .WithMany()
                 .HasForeignKey(po => po.CompanyId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
             
             builder.HasOne(po => po.Supplier)
                 .WithMany()
                 .HasForeignKey(po => po.SupplierId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
             
             builder.HasOne(po => po.User)
                 .WithMany()
                 .HasForeignKey(po => po.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(po=> po.Terms)
                 .WithMany()
                 .HasForeignKey(po => po.TermsId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(po=> po.Address)
                 .WithMany()
                 .HasForeignKey(po => po.DeliveryAddressID)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
             
         }
     }

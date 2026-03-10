@@ -19,15 +19,20 @@ namespace jvPo.Infrastructure.Configurations
             builder.Property(u => u.FullName)
                 .IsRequired()
                 .HasMaxLength(100);
+
             builder.Property(u => u.Username)
                 .IsRequired();
+
             builder.Property(u => u.Password)
                 .IsRequired();
             
             builder.HasOne(u => u.Company)
                 .WithMany()
                 .HasForeignKey(u => u.CompanyId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasIndex(u => u.Username)
+                .IsUnique();
         }
     }
 }

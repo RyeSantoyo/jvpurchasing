@@ -15,7 +15,7 @@ namespace jvPo.Models
         public string ContactPerson { get; set; } = string.Empty;
         public string Position { get; set; } = string.Empty;
         public string TelNo { get; set; } = string.Empty;
-        public int FaxNo { get; set; } 
+        public string FaxNo { get; set; } = string.Empty;
         public string MobileNo { get; set; } = string.Empty;
         public Terms Terms { get; set; } = null!;
         public int TermsId { get; set; }
