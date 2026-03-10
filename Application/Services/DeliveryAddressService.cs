@@ -32,6 +32,18 @@ namespace jvPo.Application.Services
             var delExist = await _context.DeliveryAddresses.AnyAsync(x => x.Address == deliveryAddress.Address);
             if (delExist)                
                 return (false, "Delivery address already exists.");
+
+            try
+            {
+                var delAdd = new DeliveryAddress
+                {
+                    Address = deliveryAddress.Address
+                };
+            }
+            catch (Exception ex)
+            {
+                return (false, $"An error occurred while adding the delivery address: {ex.Message}");
+            }
             throw new NotImplementedException();
         }
 
