@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("jvPo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b700c4f5574e3b3722ac15fb5286d538bedd35e0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+150c1496f7b498135591485679dbe45ed351af60")]
 [assembly: System.Reflection.AssemblyProductAttribute("jvPo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("jvPo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

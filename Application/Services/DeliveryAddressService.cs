@@ -30,22 +30,45 @@ namespace jvPo.Application.Services
                 return (false, "Delivery address cannot be null.");
 
             var delExist = await _context.DeliveryAddresses.AnyAsync(x => x.Address == deliveryAddress.Address);
-            if (delExist)                
+            if (delExist)
                 return (false, "Delivery address already exists.");
 
             try
             {
-                var delAdd = new DeliveryAddress
-                {
-                    Address = deliveryAddress.Address
-                };
+             _context.DeliveryAddresses.Add(deliveryAddress);
+            await _context.SaveChangesAsync();
+            return (true, "Delivery address added successfully.");
             }
             catch (Exception ex)
             {
                 return (false, $"An error occurred while adding the delivery address: {ex.Message}");
             }
-            throw new NotImplementedException();
+
         }
 
+        public async Task<(bool Success, string Message)> UpdateDeliveryAddressAsync(DeliveryAddress deliveryAddress)
+        {
+            if (deliveryAddress == null)
+                return (false, "Delivery address cannot be null.");
+
+            var delAdd = await _context.DeliveryAddresses.FindAsync(deliveryAddress.Id);
+            if (delAdd == null)
+                return (false, "Delivery address not found.");
+
+            delAdd.Address = deliveryAddress.Address;
+
+            await _context.SaveChangesAsync();
+            return (true, "Delivery address updated successfully.");
+        }
+
+        public async Task<(bool Success, string Message)> DeleteDeliveryAddressAsync(int id)
+        {
+            var delAdd = await _context.DeliveryAddresses.FindAsync(id);
+            if (delAdd == null)
+                return (false, "Delivery address not found.");
+            _context.DeliveryAddresses.Remove(delAdd);
+            await _context.SaveChangesAsync();
+            return (true, "Delivery address deleted successfully.");
+        }
     }
 }

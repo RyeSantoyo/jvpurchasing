@@ -10,5 +10,8 @@ namespace jvPo.Application.Interface
     {
         Task<IEnumerable<object>> GetDeliveryAddressAsync();
         Task<(bool Success, string Message)> AddDeliveryAddressAsync(DeliveryAddress deliveryAddress);
+        Task<(bool Success, string Message)> UpdateDeliveryAddressAsync(DeliveryAddress deliveryAddress);
+        Task<(bool Success, string Message)> DeleteDeliveryAddressAsync(int id);
+        
     }
 }

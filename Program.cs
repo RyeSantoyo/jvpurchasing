@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using jvPo.Models;
 using jvPo.Application.Services;
 using jvPo.Application.Interface;
+using jvPo.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +13,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<ApplicationDbContext>(ops => ops.UseSqlServer(builder.Configuration.GetConnectionString("DefCon")));
+builder.Services.AddInfrastructure();
 
-builder.Services.AddScoped<IDeliveryAddress, DeliveryAddressService>();
 //builder.Services.AddTransient<dbRepo>();
 var app = builder.Build();
 

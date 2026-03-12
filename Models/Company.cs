@@ -10,5 +10,6 @@ namespace jvPo.Models
         public int Id { get; set; }
         public int CompanyCode { get; set; }
         public string Name { get; set; } = string.Empty;
+        
     }
 }
