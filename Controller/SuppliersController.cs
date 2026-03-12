@@ -6,6 +6,7 @@ using jvPo.Application.Services;
 using jvPo.Application.Interface;
 using jvPo.Models;
 using Microsoft.AspNetCore.Mvc;
+using jvPo.Models.DTO;
 
 namespace jvPo.Controller
 {
@@ -30,12 +31,12 @@ namespace jvPo.Controller
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddSupplierAsync(Suppliers supplier)
+        public async Task<IActionResult> AddSupplierAsync(SupplierDTO dto)
         {
-            if(supplier == null)
+            if(dto == null)
                 return BadRequest("Supplier cannot be null.");
 
-            var result = await _supplierService.AddSupplierAsync(supplier);
+            var result = await _supplierService.AddSupplierAsync(dto);
             if(!result.Success)
                 return BadRequest(result.Message);
 
@@ -55,6 +56,19 @@ namespace jvPo.Controller
                 return BadRequest(result.Message);
             return Ok(result);
         }
+ 
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSupplierAsync(int id)
+        {
+            if(id<=0)
+                return BadRequest("Invalid ID.");
+            
+            var result = await _supplierService.DeleteSupplierAsync(id);
 
+            if(!result.Success)
+                return BadRequest(result.Message);
+            
+            return Ok(result);
+        }
     }
 }

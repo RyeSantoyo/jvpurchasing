@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using jvPo.Application.Interface;
 using jvPo.Models;
+using jvPo.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace jvPo.Application.Services
@@ -35,28 +36,28 @@ namespace jvPo.Application.Services
             return supplier;
         }
 
-        public async Task<(bool Success, string Message)> AddSupplierAsync(Suppliers supplier)
+        public async Task<(bool Success, string Message)> AddSupplierAsync(SupplierDTO dto)
         {
-            if (supplier == null)
+            if (dto == null)
                 return (false, "Supplier cannot be null.");
 
-            var supExist = await _context.Suppliers.AnyAsync(s => s.SupplierCode == supplier.SupplierCode);
+            var supExist = await _context.Suppliers.AnyAsync(s => s.SupplierCode == dto.SupplierCode);
             if (supExist)
                 return (false, "Supplier already exists.");
             try
             {
                 var newSupplier = new Suppliers
                 {
-                    SupplierCode = supplier.SupplierCode,
-                    SupplierName = supplier.SupplierName,
-                    SupplierAddress = supplier.SupplierAddress,
-                    CityAddress = supplier.CityAddress,
-                    ContactPerson = supplier.ContactPerson,
-                    Position = supplier.Position,
-                    TelNo = supplier.TelNo,
-                    FaxNo = supplier.FaxNo,
-                    MobileNo = supplier.MobileNo,
-                    TermsId = supplier.TermsId
+                    SupplierCode = dto.SupplierCode,
+                    SupplierName = dto.SupplierName,
+                    SupplierAddress = dto.SupplierAddress,
+                    CityAddress = dto.CityAddress,
+                    ContactPerson = dto.ContactPerson,
+                    Position = dto.Position,
+                    TelNo = dto.TelNo,
+                    FaxNo = dto.FaxNo,
+                    MobileNo = dto.MobileNo,
+                    TermsId = dto.TermsId
                 };
 
                 _context.Suppliers.Add(newSupplier);
