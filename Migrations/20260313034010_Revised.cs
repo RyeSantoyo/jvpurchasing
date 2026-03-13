@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace jvPo.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Revised : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,6 +36,27 @@ namespace jvPo.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeliveryAddress", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Suppliers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SupplierCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SupplierName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    SupplierAddress = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    CityAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContactPerson = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Position = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TelNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FaxNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MobileNo = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Suppliers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,34 +96,6 @@ namespace jvPo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Suppliers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SupplierCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SupplierName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    SupplierAddress = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    CityAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContactPerson = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Position = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TelNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FaxNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MobileNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TermsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Suppliers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Suppliers_Terms_TermsId",
-                        column: x => x.TermsId,
-                        principalTable: "Terms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PO",
                 columns: table => new
                 {
@@ -113,14 +106,15 @@ namespace jvPo.Migrations
                     PODate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SupplierId = table.Column<int>(type: "int", nullable: false),
                     DeliveryAddressID = table.Column<int>(type: "int", nullable: false),
-                    TermsId = table.Column<int>(type: "int", nullable: false),
+                    TermId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     RequestedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RONumber = table.Column<int>(type: "int", nullable: false),
                     RODate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TermsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -144,8 +138,8 @@ namespace jvPo.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_PO_Terms_TermsId",
-                        column: x => x.TermsId,
+                        name: "FK_PO_Terms_TermId",
+                        column: x => x.TermId,
                         principalTable: "Terms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -216,9 +210,9 @@ namespace jvPo.Migrations
                 column: "SupplierId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PO_TermsId",
+                name: "IX_PO_TermId",
                 table: "PO",
-                column: "TermsId");
+                column: "TermId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PO_UserId",
@@ -234,11 +228,6 @@ namespace jvPo.Migrations
                 name: "IX_PODetails_POId",
                 table: "PODetails",
                 column: "POId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Suppliers_TermsId",
-                table: "Suppliers",
-                column: "TermsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_CompanyId",
@@ -268,10 +257,10 @@ namespace jvPo.Migrations
                 name: "Suppliers");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Terms");
 
             migrationBuilder.DropTable(
-                name: "Terms");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Company");

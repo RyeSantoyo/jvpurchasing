@@ -24,7 +24,7 @@ namespace jvPo.Models
 
         [ForeignKey("TermsId")]
         public Terms Terms { get; set; } = null!;
-        public int TermsId { get; set; }
+        public int TermId { get; set; }
 
         [ForeignKey("UserId")]
         public Users User { get; set; } = null!;

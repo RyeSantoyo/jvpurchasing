@@ -105,6 +105,9 @@ namespace jvPo.Migrations
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TermId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TermsId")
                         .HasColumnType("int");
 
@@ -125,7 +128,7 @@ namespace jvPo.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.HasIndex("TermsId");
+                    b.HasIndex("TermId");
 
                     b.HasIndex("UserId");
 
@@ -220,12 +223,7 @@ namespace jvPo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TermsId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TermsId");
 
                     b.ToTable("Suppliers", (string)null);
                 });
@@ -299,14 +297,14 @@ namespace jvPo.Migrations
                         .IsRequired();
 
                     b.HasOne("jvPo.Models.Suppliers", "Supplier")
-                        .WithMany()
+                        .WithMany("POs")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("jvPo.Models.Terms", "Terms")
-                        .WithMany()
-                        .HasForeignKey("TermsId")
+                        .WithMany("POs")
+                        .HasForeignKey("TermId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -346,17 +344,6 @@ namespace jvPo.Migrations
                     b.Navigation("PurchaseOrder");
                 });
 
-            modelBuilder.Entity("jvPo.Models.Suppliers", b =>
-                {
-                    b.HasOne("jvPo.Models.Terms", "Terms")
-                        .WithMany()
-                        .HasForeignKey("TermsId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Terms");
-                });
-
             modelBuilder.Entity("jvPo.Models.Users", b =>
                 {
                     b.HasOne("jvPo.Models.Company", "Company")
@@ -371,6 +358,16 @@ namespace jvPo.Migrations
             modelBuilder.Entity("jvPo.Models.PO", b =>
                 {
                     b.Navigation("PODetails");
+                });
+
+            modelBuilder.Entity("jvPo.Models.Suppliers", b =>
+                {
+                    b.Navigation("POs");
+                });
+
+            modelBuilder.Entity("jvPo.Models.Terms", b =>
+                {
+                    b.Navigation("POs");
                 });
 #pragma warning restore 612, 618
         }

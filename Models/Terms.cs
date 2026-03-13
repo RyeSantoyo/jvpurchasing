@@ -11,5 +11,6 @@ namespace jvPo.Models
         public string Term { get; set; } = string.Empty;
         public int Days { get; set; }
 
+        public ICollection<PO> POs { get; set; } = new List<PO>();
     }
 }
