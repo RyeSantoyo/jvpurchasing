@@ -85,8 +85,9 @@ namespace jvPo.Migrations
                     b.Property<DateTime>("PODate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PONumber")
-                        .HasColumnType("int");
+                    b.Property<string>("PONumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("RODate")
                         .HasColumnType("datetime2");
@@ -103,9 +104,6 @@ namespace jvPo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SupplierId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TermId")
                         .HasColumnType("int");
 
                     b.Property<int>("TermsId")
@@ -128,7 +126,7 @@ namespace jvPo.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.HasIndex("TermId");
+                    b.HasIndex("TermsId");
 
                     b.HasIndex("UserId");
 
@@ -304,7 +302,7 @@ namespace jvPo.Migrations
 
                     b.HasOne("jvPo.Models.Terms", "Terms")
                         .WithMany("POs")
-                        .HasForeignKey("TermId")
+                        .HasForeignKey("TermsId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

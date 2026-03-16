@@ -51,7 +51,7 @@ namespace jvPo.Infrastructure.Configurations
 
             builder.HasOne(po=> po.Terms)
                 .WithMany(po=> po.POs)
-                .HasForeignKey(po => po.TermId)
+                .HasForeignKey(po => po.TermsId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(po=> po.Address)

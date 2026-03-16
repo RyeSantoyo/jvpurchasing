@@ -11,20 +11,22 @@ namespace jvPo.Models
         public int Id { get; set; }
         public Company Company { get; set; } = null!;
         public int CompanyId { get; set; }
-        public int PONumber { get; set; }
+        public string PONumber { get; set; } = string.Empty;
         public DateTime PODate { get; set; } = DateTime.UtcNow;
         [ForeignKey("SupplierId")]
         public Suppliers Supplier { get; set; } = null!;
         public int SupplierId { get; set; }
+        public string SupplierName { get; set; } = string.Empty;
 
         //Farms and Offices
         [ForeignKey("DeliveryAddressID")]
         public DeliveryAddress Address { get; set; } = null!;
         public int DeliveryAddressID { get; set; }
+        public string DeliveryAddress { get; set; } = string.Empty;
 
         [ForeignKey("TermsId")]
         public Terms Terms { get; set; } = null!;
-        public int TermId { get; set; }
+        public int TermsId { get; set; }
 
         [ForeignKey("UserId")]
         public Users User { get; set; } = null!;

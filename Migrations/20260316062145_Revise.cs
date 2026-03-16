@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace jvPo.Migrations
 {
     /// <inheritdoc />
-    public partial class Revised : Migration
+    public partial class Revise : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -102,19 +102,18 @@ namespace jvPo.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CompanyId = table.Column<int>(type: "int", nullable: false),
-                    PONumber = table.Column<int>(type: "int", nullable: false),
+                    PONumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     PODate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SupplierId = table.Column<int>(type: "int", nullable: false),
                     DeliveryAddressID = table.Column<int>(type: "int", nullable: false),
-                    TermId = table.Column<int>(type: "int", nullable: false),
+                    TermsId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     RequestedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RONumber = table.Column<int>(type: "int", nullable: false),
                     RODate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TermsId = table.Column<int>(type: "int", nullable: false)
+                    Remarks = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -138,8 +137,8 @@ namespace jvPo.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_PO_Terms_TermId",
-                        column: x => x.TermId,
+                        name: "FK_PO_Terms_TermsId",
+                        column: x => x.TermsId,
                         principalTable: "Terms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -210,9 +209,9 @@ namespace jvPo.Migrations
                 column: "SupplierId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PO_TermId",
+                name: "IX_PO_TermsId",
                 table: "PO",
-                column: "TermId");
+                column: "TermsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PO_UserId",
