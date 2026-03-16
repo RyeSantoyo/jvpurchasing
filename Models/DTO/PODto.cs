@@ -8,7 +8,7 @@ namespace jvPo.Models.DTO
     public class PODto
     {
         public int CompanyId { get; set; }
-        public int PONumber { get; set; }
+        public string PONumber { get; set; } = string.Empty;
         public DateTime PODate { get; set; } = DateTime.UtcNow;
         public int SupplierId { get; set; }
         public int DeliveryAddress { get; set; }
@@ -21,7 +21,5 @@ namespace jvPo.Models.DTO
         public decimal TotalAmount { get; set; }
         public string Remarks { get; set; } = string.Empty;
         public List<PODetailsDTO> PODetails { get; set; } = new List<PODetailsDTO>();
-
-
     }
 }

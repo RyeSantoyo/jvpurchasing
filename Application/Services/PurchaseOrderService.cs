@@ -25,6 +25,7 @@ namespace jvPo.Application.Services
                 return(false, "Invalid Data", "");
 
                 var supplierExists = await _context.Suppliers.AnyAsync(s=> s.Id == dto.SupplierId);
+                var supplier = await _context.Suppliers.FindAsync(dto.SupplierId);
             if(!supplierExists)
                 return (false, "Supplier Does not exist.", "");
             Console.WriteLine($"Received JSON:{JsonSerializer.Serialize(dto)} " );
@@ -39,6 +40,8 @@ namespace jvPo.Application.Services
                 {
                     PONumber = poNumber,
                     SupplierId = dto.SupplierId,
+                    SupplierName = supplier?.SupplierName
+                    
                 };
             }
             catch
@@ -64,7 +67,7 @@ namespace jvPo.Application.Services
                     lastNumber = number;
                 }
             }
-                return $"PO-{lastNumber + 1 : D5}";
+                return $"PO-{lastNumber + 1 :D5}";
         }
 
         public async Task<IEnumerable<object>> GetPurchaseOrdersAsync()
