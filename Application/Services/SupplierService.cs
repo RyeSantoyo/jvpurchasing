@@ -30,7 +30,7 @@ namespace jvPo.Application.Services
                 s.TelNo,
                 s.FaxNo,
                 s.MobileNo,
-                s.TermsId,
+
             }).ToListAsync();
 
             return supplier;
@@ -57,7 +57,7 @@ namespace jvPo.Application.Services
                     TelNo = dto.TelNo,
                     FaxNo = dto.FaxNo,
                     MobileNo = dto.MobileNo,
-                    TermsId = dto.TermsId
+
                 };
 
                 _context.Suppliers.Add(newSupplier);
@@ -102,7 +102,6 @@ namespace jvPo.Application.Services
             existingSupplier.TelNo = supplier.TelNo;
             existingSupplier.FaxNo = supplier.FaxNo;
             existingSupplier.MobileNo = supplier.MobileNo;
-            existingSupplier.TermsId = supplier.TermsId;
 
             _context.Suppliers.Update(existingSupplier);
             await _context.SaveChangesAsync();

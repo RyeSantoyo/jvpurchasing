@@ -32,10 +32,6 @@ namespace jvPo.Infrastructure.Configurations
             builder.Property(s => s.MobileNo)
                 .IsRequired();
 
-            builder.HasOne(s => s.Terms)
-                .WithMany()
-                .HasForeignKey(s => s.TermsId)
-                .OnDelete(DeleteBehavior.Restrict);
 
         }
     }

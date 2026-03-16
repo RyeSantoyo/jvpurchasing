@@ -14,6 +14,7 @@ namespace jvPo.Infrastructure
             services.AddScoped<IDeliveryAddress, DeliveryAddressService>();
             services.AddScoped<ISupplier, SupplierService>();
             services.AddScoped<ITerms, TermsService>();
+            services.AddScoped<IPurchaseOrder, PurchaseOrderService>();
 
             return services;
         }

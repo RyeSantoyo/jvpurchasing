@@ -40,7 +40,7 @@ namespace jvPo.Infrastructure.Configurations
                 .OnDelete(DeleteBehavior.Restrict);
             
             builder.HasOne(po => po.Supplier)
-                .WithMany()
+                .WithMany(po=> po.POs)
                 .HasForeignKey(po => po.SupplierId)
                 .OnDelete(DeleteBehavior.Restrict);
             
@@ -50,13 +50,18 @@ namespace jvPo.Infrastructure.Configurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(po=> po.Terms)
-                .WithMany()
+                .WithMany(po=> po.POs)
                 .HasForeignKey(po => po.TermsId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(po=> po.Address)
                 .WithMany()
                 .HasForeignKey(po => po.DeliveryAddressID)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            builder.HasMany(po => po.PODetails)
+                .WithOne(pd => pd.PurchaseOrder)
+                .HasForeignKey(pd => pd.POId)
                 .OnDelete(DeleteBehavior.Restrict);
             
         }
