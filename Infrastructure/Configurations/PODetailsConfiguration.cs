@@ -24,9 +24,11 @@ namespace jvPo.Infrastructure.Configurations
             builder.Property(pd => pd.Description)
                 .HasMaxLength(200);
             builder.Property(pd => pd.Price)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnType("decimal(18,2)");
             builder.Property(pd=> pd.Total)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnType("decimal(18,2)");
             builder.HasOne(pd => pd.Company)
                 .WithMany()
                 .HasForeignKey(pd => pd.CompanyId)

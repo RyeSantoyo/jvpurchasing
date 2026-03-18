@@ -26,6 +26,9 @@ namespace jvPo.Application.Services
 
                 var supplierExists = await _context.Suppliers.AnyAsync(s=> s.Id == dto.SupplierId);
                 var supplier = await _context.Suppliers.FindAsync(dto.SupplierId);
+                var terms = await _context.Terms.FindAsync(dto.TermsId);
+                var company = await _context.Companies.FindAsync(dto.CompanyId);
+                
             if(!supplierExists)
                 return (false, "Supplier Does not exist.", "");
             Console.WriteLine($"Received JSON:{JsonSerializer.Serialize(dto)} " );
@@ -38,10 +41,21 @@ namespace jvPo.Application.Services
                 var poNumber = await GeneratePONumberAsync();
                 var newPo = new PO
                 {
+                    CompanyId = dto.CompanyId,
+                    CompanyCode = company?.CompanyCode ?? string.Empty,
+
                     PONumber = poNumber,
+
                     SupplierId = dto.SupplierId,
-                    SupplierName = supplier?.SupplierName
-                    
+                    SupplierName = supplier?.SupplierName ?? string.Empty,
+                    SupplierAddress = supplier?.SupplierAddress ?? string.Empty,
+
+                    DeliveryAddressID = dto.DeliveryId,
+                    DeliveryAddress = dto.DeliveryAddress,                    
+                    AgreedTerms = terms?.Term ?? string.Empty,
+                    OrderBy = dto.OrderBy,
+                    RequestedBy = dto.RequestedBy,
+                    RONumber = dto.RONumber,           
                 };
             }
             catch
@@ -77,7 +91,7 @@ namespace jvPo.Application.Services
             .Include(po => po.Terms)
             .Include(po => po.Address)
             .Include(po => po.PODetails)
-            .Include(po => po.User)
+
             .Select(po => new
             {
                 po.Id,
@@ -88,8 +102,6 @@ namespace jvPo.Application.Services
                 po.Terms.Term,
                 po.DeliveryAddressID,
                 DeliveryAddress = po.Address.Address,
-                po.UserId,
-                UserName = po.User.Username,
                 po.RequestedBy,
                 po.OrderBy,
                 po.RONumber,

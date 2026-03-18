@@ -32,38 +32,39 @@ namespace jvPo.Infrastructure.Configurations
             builder.Property(po => po.RODate)
                 .IsRequired();
             builder.Property(po => po.TotalAmount)
-                .IsRequired();
-            
-            builder.HasOne(po=> po.Company)
+                .IsRequired()
+                .HasColumnType("decimal(18,2)");
+
+            builder.HasOne(po => po.Company)
                 .WithMany()
                 .HasForeignKey(po => po.CompanyId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             builder.HasOne(po => po.Supplier)
-                .WithMany(po=> po.POs)
+                .WithMany(po => po.POs)
                 .HasForeignKey(po => po.SupplierId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
-            builder.HasOne(po => po.User)
-                .WithMany()
-                .HasForeignKey(po => po.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(po=> po.Terms)
-                .WithMany(po=> po.POs)
+            // builder.HasOne(po => po.User)
+            //     .WithMany()
+            //     .HasForeignKey(po => po.UserId)
+            //     .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(po => po.Terms)
+                .WithMany(po => po.POs)
                 .HasForeignKey(po => po.TermsId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(po=> po.Address)
+            builder.HasOne(po => po.Address)
                 .WithMany()
                 .HasForeignKey(po => po.DeliveryAddressID)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             builder.HasMany(po => po.PODetails)
                 .WithOne(pd => pd.PurchaseOrder)
                 .HasForeignKey(pd => pd.POId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
         }
     }
 }
