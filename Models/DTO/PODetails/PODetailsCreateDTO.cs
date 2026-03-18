@@ -7,8 +7,8 @@ namespace jvPo.Models.DTO.PODetails
 {
     public class PODetailsCreateDTO
     {
-        public int CompanyId { get; set; }
-        public int POId { get; set; }
+        public int CompanyCode { get; set; }
+        public int PONumber { get; set; }
         public int Quantity { get; set; }
         public string Unit { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

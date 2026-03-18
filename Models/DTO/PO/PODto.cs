@@ -23,6 +23,6 @@ namespace jvPo.Models.DTO
         public DateTime RODate { get; set; } = DateTime.UtcNow;
         public decimal TotalAmount { get; set; }
         public string Remarks { get; set; } = string.Empty;
-        public List<PODetailsDTO> PODetails { get; set; } = new List<PODetailsDTO>();
+        public List<PODetailsDTO> PODetails { get; set; } = new();
     }
 }
