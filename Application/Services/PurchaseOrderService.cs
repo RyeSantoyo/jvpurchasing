@@ -68,6 +68,7 @@ namespace jvPo.Application.Services
                     Remarks = dto.Remarks,
                     PODetails = dto.PODetails.Select(d => new PODetails
                     {
+                        CompanyId = d.CompanyId,
                         CompanyCode = d.CompanyCode,
                         PONumber = poNumber,
                         Quantity = d.Quantity,
