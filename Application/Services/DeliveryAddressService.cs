@@ -35,9 +35,14 @@ namespace jvPo.Application.Services
 
             try
             {
-             _context.DeliveryAddresses.Add(deliveryAddress);
-            await _context.SaveChangesAsync();
-            return (true, "Delivery address added successfully.");
+                var newDeladd = new DeliveryAddress
+                {
+                    Address = deliveryAddress.Address
+                };
+
+                _context.DeliveryAddresses.Add(newDeladd);
+                await _context.SaveChangesAsync();
+                return (true, "Delivery address added successfully.");
             }
             catch (Exception ex)
             {

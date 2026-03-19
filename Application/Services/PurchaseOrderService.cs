@@ -94,9 +94,9 @@ namespace jvPo.Application.Services
 
         }
 
-        public async Task<(bool Success, string Message)> DeletePurchaseOrderAsync(PODto dto)
+        public async Task<(bool Success, string Message)> DeletePurchaseOrderAsync(int id)
         {
-            var po = await _context.POs.FindAsync(dto);
+            var po = await _context.POs.FindAsync(id);
 
             if (po == null)
                 return (false, "Cannot be found");
@@ -165,7 +165,14 @@ namespace jvPo.Application.Services
 
         public async Task<(bool Sucess, string Message)> UpdatePurchaseOrderAsync(PODto dto)
         {
-            throw new NotImplementedException();
+            if(dto == null)
+                return (false, "Not available");
+            
+            var pod = await _context.POs.FindAsync(dto.POID);
+            if(pod==null)
+                return (false, "Not available");
+
+            return (true, "Success");
         }
     }
 }

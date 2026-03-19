@@ -13,6 +13,6 @@ namespace jvPo.Application.Interface
      Task<string> GeneratePONumberAsync();
      Task<(bool Success, string Message, string poNumber)> AddPurchaseOrderAsync(PODto dto);
      Task<(bool Sucess, string Message)> UpdatePurchaseOrderAsync (PODto dto);
-     Task<(bool Success, string Message)> DeletePurchaseOrderAsync (PODto dto);
+     Task<(bool Success, string Message)> DeletePurchaseOrderAsync (int id);
     }
 }

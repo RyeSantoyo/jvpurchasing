@@ -7,6 +7,7 @@ namespace jvPo.Models.DTO
 {
     public class PODto
     {
+        public int POID { get; set; }
         public int CompanyId { get; set; }
         public string CompanyCode { get; set; } = string.Empty;
         public string PONumber { get; set; } = string.Empty;
