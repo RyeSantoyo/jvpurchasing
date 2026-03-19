@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using jvPo.Application.Interface;
 using jvPo.Models;
+using jvPo.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace jvPo.Controller
@@ -25,6 +26,34 @@ namespace jvPo.Controller
         {
             var purchaseOrders = await _purchaseOrderService.GetPurchaseOrdersAsync();
             return Ok(purchaseOrders);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPurchaseOrderAsync(PODto dto)
+        {
+            if(dto == null)
+                return BadRequest("PO is empty.");
+            
+            var result = await _purchaseOrderService.AddPurchaseOrderAsync(dto);
+            if(!result.Success)
+                return BadRequest(result.Message.ToString());
+            
+            return Ok(result.Message);
+        }
+
+        [HttpDelete]
+
+        public async Task<IActionResult> DeletePurchaseOrderAsync(int id)
+        {
+            if(id<=0)
+                return BadRequest("Not available");
+            var result = await _purchaseOrderService.DeletePurchaseOrderAsync(id);
+
+            if(!result.Success)
+                return NotFound(result.Message);
+            
+            return Ok();
+            
         }
     }
 }

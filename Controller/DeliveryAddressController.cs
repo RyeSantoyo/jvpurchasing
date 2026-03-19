@@ -22,7 +22,7 @@ namespace jvPo.Controller
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<object>>> GetDeliveryAddressAsync()
+        public async Task<IActionResult> GetDeliveryAddressAsync()
         {
             var deliveryAddresses = await _deliveryAddressService.GetDeliveryAddressAsync();
 

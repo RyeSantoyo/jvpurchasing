@@ -11,8 +11,10 @@ namespace jvPo.Models
 
     public Company Company { get; set; } = null!;
     public int CompanyId { get; set; }
+    public string CompanyCode { get; set; } = string.Empty;
     public PO PurchaseOrder { get; set; } = null!;
     public int POId { get; set; }
+    public string PONumber { get; set; } = string.Empty;
     public int Quantity { get; set; }
     public string Unit { get; set; } = string.Empty;
     public string Description { get; set; } =string.Empty;

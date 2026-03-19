@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace jvPo.Models.DTO
+namespace jvPo.Models.DTO.PO
 {
-    public class PODto
+    public class POCreateDto
     {
         public int CompanyId { get; set; }
         public string PONumber { get; set; } = string.Empty;
