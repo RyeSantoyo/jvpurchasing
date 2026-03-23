@@ -13,7 +13,7 @@ namespace jvPo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20260318022456_test")]
-    partial class test
+    partial class Test
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
