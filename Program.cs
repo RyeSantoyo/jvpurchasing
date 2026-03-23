@@ -14,6 +14,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<ApplicationDbContext>(ops => ops.UseSqlServer(builder.Configuration.GetConnectionString("DefCon")));
 builder.Services.AddInfrastructure();
+builder.Services.AddCors(ops=> ops.AddPolicy("AllowFrontend", ops =>
+{
+        ops.WithOrigins().AllowAnyHeader().AllowAnyMethod();
+}));
 
 //builder.Services.AddTransient<dbRepo>();
 var app = builder.Build();
