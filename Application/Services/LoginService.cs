@@ -49,7 +49,7 @@ namespace jvPo.Application.Services
 
         public async Task<Users?> LoginUserAsync(LoginDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(us=> us.Username == dto.Username && us.CompanyCode == dto.CompanyCode && us.IsActive);
+            var user = await _context.Users.FirstOrDefaultAsync(us=> us.Username == dto.Username);
 
             if(user == null)
                 return null;
