@@ -23,7 +23,12 @@ namespace jvPo.Infrastructure.Configurations
             builder.Property(u => u.Username)
                 .IsRequired();
 
-            builder.Property(u => u.Password)
+            builder.Property(u => u.PasswordHash)
+                .IsRequired();
+
+            builder.Property(u=> u.CompanyCode)
+                .IsRequired();
+            builder.Property(u=> u.Role)
                 .IsRequired();
             
             builder.HasOne(u => u.Company)

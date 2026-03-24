@@ -16,6 +16,7 @@ namespace jvPo.Infrastructure
             services.AddScoped<ITerms, TermsService>();
             services.AddScoped<IPurchaseOrder, PurchaseOrderService>();
             services.AddScoped<ICompany, CompanyService>();
+            services.AddScoped<LoginService>();
 
             return services;
         }
