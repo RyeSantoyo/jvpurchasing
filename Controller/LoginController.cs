@@ -41,7 +41,7 @@ namespace jvPo.Controller
             var user = await _loginService.LoginUserAsync(login);
 
             if (user == null)
-                return Unauthorized();
+                return BadRequest("User does not yet exist.");
 
             return Ok(user);
         }
