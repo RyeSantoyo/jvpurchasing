@@ -17,6 +17,7 @@ namespace jvPo.Infrastructure
             services.AddScoped<IPurchaseOrder, PurchaseOrderService>();
             services.AddScoped<ICompany, CompanyService>();
             services.AddScoped<LoginService>();
+            services.AddScoped<JwtTokenGenerator>();
 
             return services;
         }

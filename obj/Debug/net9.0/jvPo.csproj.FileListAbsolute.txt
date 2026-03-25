@@ -338,3 +338,4 @@ C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net9.0\refint\jvPo.dll
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net9.0\jvPo.pdb
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net9.0\jvPo.genruntimeconfig.cache
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net9.0\ref\jvPo.dll
+C:\Users\John\Desktop\Jovic\jvPo\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

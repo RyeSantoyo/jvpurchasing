@@ -4,6 +4,9 @@ using jvPo.Models;
 using jvPo.Application.Services;
 using jvPo.Application.Interface;
 using jvPo.Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +22,21 @@ builder.Services.AddCors(ops=> ops.AddPolicy("AllowFrontend", ops =>
         ops.WithOrigins().AllowAnyHeader().AllowAnyMethod();
 }));
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(ops =>
+{
+        ops.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+            )
+        };
+});
 //builder.Services.AddTransient<dbRepo>();
 var app = builder.Build();
 
@@ -31,6 +49,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseHttpsRedirection();
 app.UseAuthorization();
+app.UseAuthentication();
 app.MapControllers();
 app.Run();
 
@@ -60,7 +79,3 @@ app.Run();
 //     Console.WriteLine($"Error Message: {ex.Message}");
 //     Console.WriteLine($"Stack Trace: {ex.StackTrace}");
 // }
-
-
-
-
