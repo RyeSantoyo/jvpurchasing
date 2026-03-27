@@ -3,4 +3,4 @@ appsettings.Development.json
 bin/
 obj/
 
-.log
+*.log
