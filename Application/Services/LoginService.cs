@@ -7,6 +7,7 @@ using jvPo.Infrastructure;
 using jvPo.Models;
 using jvPo.Models.DTO.AuthDto;
 using jvPo.Models.DTO.LoginDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -69,6 +70,12 @@ namespace jvPo.Application.Services
             var token = _jwtTokenGenerator.GenerateToken(user);
 
             return token;
+        }
+
+        public async Task<IEnumerable<object>> GetUsersAsync()
+        {
+            var users = await _context.Users.Select(x => new { x.Id, x.Username, x.FullName, x.Role, x.CompanyCode }).ToListAsync();
+            return users;
         }
 
     }
