@@ -37,7 +37,7 @@ namespace jvPo.Infrastructure
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issue"],
+                issuer: _configuration["Jwt:Issuer"],
                 audience : _configuration["Jwt:Audience"],
                 claims : claims,
                 expires : DateTime.Now.AddHours(8),

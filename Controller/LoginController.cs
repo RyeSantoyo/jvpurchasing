@@ -6,6 +6,7 @@ using jvPo.Application.Services;
 using jvPo.Models;
 using jvPo.Models.DTO.AuthDto;
 using jvPo.Models.DTO.LoginDto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace jvPo.Controller
@@ -44,6 +45,14 @@ namespace jvPo.Controller
                 return BadRequest("User does not yet exist.");
 
             return Ok(user);
+        }
+        
+        [Authorize(Roles = "Admin")]
+        [HttpGet("users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var users = await _loginService.GetUsersAsync();
+            return Ok(users);
         }
     }
 }
