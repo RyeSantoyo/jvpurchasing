@@ -18,6 +18,7 @@ namespace jvPo.Infrastructure
             services.AddScoped<ICompany, CompanyService>();
             services.AddScoped<LoginService>();
             services.AddScoped<JwtTokenGenerator>();
+            services.AddScoped<IDataMigration, DataMigrationService>();
 
             return services;
         }

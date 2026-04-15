@@ -12,8 +12,7 @@ namespace jvPo.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<DeliveryAddress> builder)
         {
-            builder.ToTable("DeliveryAddress"); 
-            
+            builder.ToTable("DeliveryAddress");
             builder.HasKey(da => da.Id);
             builder.Property(da => da.Address)
                 .IsRequired()
