@@ -30,13 +30,14 @@ namespace jvPo.Application.Services
             //             suppname, address, terms, requestedby, ronum, delto, date2, totalamount, remarks, orderby, preparedby");
             var legacyRows = await legacyConn.QueryAsync<LegacyPO>(@"SELECT * From PO");
             var companyDict = await _context.Companies.ToDictionaryAsync(c => c.CompanyCode, c => c.Id);
-
+            
             int processedCount = 0;
             int batchSize = 500;
             foreach (var oldItem in legacyRows)
             {
                 string searchPONO = oldItem.PONO.ToString("G0");
-                string legacyCompId = oldItem.CompId.ToString();
+                string legacyCompId = oldItem.CompID.ToString();
+                //int legacySupid = (int)oldItem.suppid;
 
                 if (companyDict.TryGetValue(legacyCompId, out int newCompanyId))
                 {
@@ -47,18 +48,20 @@ namespace jvPo.Application.Services
                         {
                             PONumber = searchPONO,
                             PODate = oldItem.date1,
-                            SupplierId = (int)oldItem.suppid,
+                            SupplierId = 1,
                             SupplierName = oldItem.suppname,
                             SupplierAddress = oldItem.address,
                             AgreedTerms = oldItem.terms,
+                            TermsId = 1,
                             RequestedBy = oldItem.requestedby,
                             RONumber = (int)oldItem.ronum,
                             DeliveryAddress = oldItem.delto,
+                            DeliveryAddressID = 1,
                             RODate = oldItem.date2,
                             TotalAmount = oldItem.totalamount,
                             Remarks = oldItem.remarks,
                             OrderBy = oldItem.orderby,
-                            CompanyCode = oldItem.CompId.ToString(),
+                            CompanyCode = newCompanyId.ToString(),
 
                             CompanyId = newCompanyId
 

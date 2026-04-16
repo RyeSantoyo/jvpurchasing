@@ -10,7 +10,7 @@ namespace jvPo.Application.DatabaseMigration
 #pragma warning disable IDE1006 // Naming Styles
 
         public int id { get; set; }
-        public int CompId { get; set; }
+        public int CompID { get; set; }
         public decimal PONO { get; set; }
         public DateTime date1 { get; set; }
         public decimal suppid { get; set; }
