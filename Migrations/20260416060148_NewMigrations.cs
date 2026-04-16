@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace jvPo.Migrations
 {
     /// <inheritdoc />
-    public partial class Revise : Migration
+    public partial class NewMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,7 @@ namespace jvPo.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CompanyCode = table.Column<int>(type: "int", nullable: false),
+                    CompanyCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
@@ -80,9 +80,12 @@ namespace jvPo.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CompanyId = table.Column<int>(type: "int", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CompanyCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -102,12 +105,16 @@ namespace jvPo.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CompanyId = table.Column<int>(type: "int", nullable: false),
+                    CompanyCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PONumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     PODate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SupplierId = table.Column<int>(type: "int", nullable: false),
+                    SupplierName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SupplierAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DeliveryAddressID = table.Column<int>(type: "int", nullable: false),
+                    DeliveryAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TermsId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    AgreedTerms = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RequestedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RONumber = table.Column<int>(type: "int", nullable: false),
@@ -142,12 +149,6 @@ namespace jvPo.Migrations
                         principalTable: "Terms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_PO_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,7 +158,9 @@ namespace jvPo.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CompanyId = table.Column<int>(type: "int", nullable: false),
+                    CompanyCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     POId = table.Column<int>(type: "int", nullable: false),
+                    PONumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Unit = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
@@ -214,11 +217,6 @@ namespace jvPo.Migrations
                 column: "TermsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PO_UserId",
-                table: "PO",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PODetails_CompanyId",
                 table: "PODetails",
                 column: "CompanyId");
@@ -247,7 +245,13 @@ namespace jvPo.Migrations
                 name: "PODetails");
 
             migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
                 name: "PO");
+
+            migrationBuilder.DropTable(
+                name: "Company");
 
             migrationBuilder.DropTable(
                 name: "DeliveryAddress");
@@ -257,12 +261,6 @@ namespace jvPo.Migrations
 
             migrationBuilder.DropTable(
                 name: "Terms");
-
-            migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Company");
         }
     }
 }

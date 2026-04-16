@@ -12,8 +12,8 @@ using jvPo.Models;
 namespace jvPo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260415075126_Legacy")]
-    partial class Legacy
+    [Migration("20260416060148_NewMigrations")]
+    partial class NewMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
