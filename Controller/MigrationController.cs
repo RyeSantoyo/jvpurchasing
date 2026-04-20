@@ -24,14 +24,30 @@ namespace jvPo.Controller
             try
             {
                 var totalProcessed = await _dataMigration.MigratePOAsync();
-                return Ok(new {message="Migration Successful", totalProcessed});
+                return Ok(new { message = "Migration Successful", totalProcessed });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (not implemented here)
+                return StatusCode(500, new { message = "Migration Failed", error = ex.Message });
+            }
+        }
+        [HttpPost("migrate-podetails")]
+
+        public async Task<IActionResult> MigratePOAsync()
+        {
+            try
+            {
+                var totalProcessed = await _dataMigration.MigratePODetailsAsync();
+                return Ok(new {message = "Migration Successful", totalProcessed});
             }
             catch(Exception ex)
             {
-                // Log the exception (not implemented here)
-                return StatusCode(500, new {message="Migration Failed", error = ex.Message});
+                return StatusCode(500, new {message = "Migration Failed", error = ex.Message});
+            }
         }
-        
-        }
+
+
+
     }
 }
