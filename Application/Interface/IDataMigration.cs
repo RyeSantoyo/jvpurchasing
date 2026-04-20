@@ -8,5 +8,6 @@ namespace jvPo.Application.Interface
     public interface IDataMigration
     {
         Task<int> MigratePOAsync();
+        Task<int> MigratePODetailsAsync();
     }
 }

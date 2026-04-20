@@ -32,7 +32,7 @@ namespace jvPo.Application.Services
             var companyDict = await _context.Companies.ToDictionaryAsync(c => c.CompanyCode.Trim(), c => c.Id);
             var suppDict = await _context.Suppliers.ToDictionaryAsync(s => s.SupplierName.Trim().ToLower(), s => s.Id);
             var termsDict = await _context.Terms.ToDictionaryAsync(t => t.Term.Trim().ToLower(), t => t.Id);
-            var addressDict = await _context.DeliveryAddresses.ToDictionaryAsync(t=> t.Address.Trim().ToLower(), t=> t.Id);
+            var addressDict = await _context.DeliveryAddresses.ToDictionaryAsync(t => t.Address.Trim().ToLower(), t => t.Id);
 
             int processedCount = 0;
             int batchSize = 500;
@@ -58,10 +58,10 @@ namespace jvPo.Application.Services
                                 PONumber = searchPONO,
                                 PODate = oldItem.date1,
                                 SupplierId = newSuppId,
-                                SupplierName = oldItem.suppname,
+                                SupplierName = oldItem?.suppname,
                                 SupplierAddress = oldItem.address,
                                 AgreedTerms = oldItem.terms,
-                                TermsId = newTermsId != 0 ? newTermsId :1,
+                                TermsId = newTermsId != 0 ? newTermsId : 1,
                                 RequestedBy = oldItem.requestedby,
                                 RONumber = (int)oldItem.ronum,
                                 DeliveryAddress = oldItem.delto,
@@ -86,17 +86,71 @@ namespace jvPo.Application.Services
                         }
                     }
 
+                }
+                else
+                {
+                    Console.WriteLine($"Company Code {legacyCompId} not found in new database. Skipping PO with PONumber {searchPONO}.");
+                }
+                // var parentHeader = await _context.POs.FirstOrDefaultAsync(x => x.PONumber == searchPONO);
+
+            }
+
+            await _context.SaveChangesAsync();
+            return processedCount;
+        }
+
+        public async Task<int> MigratePODetailsAsync()
+        {
+            using var legacyConn = new SqlConnection(_legacyConnString);
+
+            var legacyData = await legacyConn.QueryAsync<LegacyPODetails>(@"SELECT * FROM PODetails");
+            var companyDict = await _context.Companies.ToDictionaryAsync(c => c.CompanyCode.Trim(), c => c.Id);
+            var poDict = await _context.POs.ToDictionaryAsync(p=> p.PONumber.Trim(), p=> p.Id);
+
+            int processedCount = 0;
+            int batchSize = 500;
+
+            foreach(var oldPoDetails in legacyData)
+            {
+                string searchPONO = oldPoDetails.PONO.ToString("G0");
+                if(poDict.TryGetValue(searchPONO, out int newPoId))
+                {
+                    if(companyDict.TryGetValue(legacyConn.QueryFirstOrDefault<string>("SELECT CompID FROM PO WHERE PONO = @PONO", new { PONO = oldPoDetails.PONO }).Trim(), out int newCompanyId))
+                    {
+                        var newPoDetails = new PODetails
+                        {
+                            POId = newPoId,
+                            PONumber = searchPONO,
+                            CompanyId = newCompanyId,
+                            CompanyCode = newCompanyId.ToString(),
+                            Quantity = oldPoDetails.qty,
+                            Unit = oldPoDetails.unit,
+                            Description = oldPoDetails.xdesc,
+                            Price = oldPoDetails.price,
+                            Total = oldPoDetails.total
+                        };
+                        _context.PODetails.Add(newPoDetails);
+                        processedCount++;
+
+                        if (processedCount % batchSize == 0)
+                        {
+                            await _context.SaveChangesAsync();
+                            _context.ChangeTracker.Clear();
+                        }
                     }
                     else
                     {
-                        Console.WriteLine($"Company Code {legacyCompId} not found in new database. Skipping PO with PONumber {searchPONO}.");
+                        Console.WriteLine($"Company ID for PO with PONumber {searchPONO} not found. Skipping PODetails.");
                     }
-                    // var parentHeader = await _context.POs.FirstOrDefaultAsync(x => x.PONumber == searchPONO);
-
                 }
-
-                await _context.SaveChangesAsync();
-                return processedCount;
+                else
+                {
+                    Console.WriteLine($"Parent PO with PONumber {searchPONO} not found for PODetails. Skipping.");
+                }
             }
+
+            await _context.SaveChangesAsync();
+            return processedCount;
         }
     }
+}
