@@ -10,9 +10,12 @@ namespace jvPo.Application.Interface
     public interface IPurchaseOrder
     {
      Task<IEnumerable<object>> GetPurchaseOrdersAsync();
+     Task<IEnumerable<object>> GetPOByIdAsync(int id);
      Task<string> GeneratePONumberAsync();
      Task<(bool Success, string Message, string poNumber)> AddPurchaseOrderAsync(PODto dto);
      Task<(bool Sucess, string Message)> UpdatePurchaseOrderAsync (PODto dto);
      Task<(bool Success, string Message)> DeletePurchaseOrderAsync (int id);
+     Task<IEnumerable<object>> GetPODetailsAsync();
+     Task<IEnumerable<object>> GetPODetailsAsyncId(int id);
     }
 }

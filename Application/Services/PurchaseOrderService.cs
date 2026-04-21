@@ -125,6 +125,64 @@ namespace jvPo.Application.Services
             return $"PO-{lastNumber + 1:D5}";
         }
 
+        public async Task<IEnumerable<object>> GetPOByIdAsync(int id)
+        {
+            var pos = await _context.POs
+                                    .Include(po => po.Supplier)
+                                    .Include(po => po.Terms)
+                                    .Include(po => po.Address)
+                                    .Include(po => po.PODetails).FirstOrDefaultAsync(p => p.Id == id);
+           if(pos == null)
+            {
+                return Enumerable.Empty<object>();
+            }
+
+            var result = new
+            {
+                pos.Id,
+                pos.PONumber,
+                pos.PODate,
+                pos.SupplierId,
+                pos.Supplier.SupplierName,
+                pos.Terms.Term,
+                pos.DeliveryAddressID,
+                pos.Address.Address,
+                pos.RequestedBy,
+                pos.OrderBy,
+                pos.RONumber,
+                pos.RODate,
+                pos.TotalAmount,
+                pos.Remarks,
+            };
+            return new[]{pos};
+
+        }
+
+        public async Task<IEnumerable<object>> GetPODetailsAsync()
+        {
+
+            var pod = await _context.PODetails.Select(d => new
+            {
+                d.Id,
+                d.POId,
+                d.PONumber,
+                d.CompanyId,
+                d.CompanyCode,
+                d.Quantity,
+                d.Unit,
+                d.Description,
+                d.Price,
+                d.Total
+            }).OrderBy(d => d.PONumber).ToListAsync();
+            return pod;
+
+        }
+
+        public Task<IEnumerable<object>> GetPODetailsAsyncId(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<object>> GetPurchaseOrdersAsync()
         {
             var pos = await _context.POs
@@ -157,6 +215,10 @@ namespace jvPo.Application.Services
                     detail.Description,
                     detail.CompanyId,
                     detail.POId,
+                    detail.CompanyCode,
+                    detail.Price,
+                    detail.Total,
+                    detail.PONumber
                 }).ToList()
             })
             .ToListAsync();
@@ -166,11 +228,11 @@ namespace jvPo.Application.Services
 
         public async Task<(bool Sucess, string Message)> UpdatePurchaseOrderAsync(PODto dto)
         {
-            if(dto == null)
+            if (dto == null)
                 return (false, "Not available");
-            
+
             var pod = await _context.POs.FindAsync(dto.POID);
-            if(pod==null)
+            if (pod == null)
                 return (false, "Not available");
 
             return (true, "Success");

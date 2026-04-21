@@ -21,11 +21,18 @@ namespace jvPo.Controller
             _purchaseOrderService = purchaseOrderService;
             _context = context;
         }
-        [HttpGet]
+        [HttpGet("pos")]
         public async Task<IActionResult> GetPurchaseOrders()
         {
             var purchaseOrders = await _purchaseOrderService.GetPurchaseOrdersAsync();
             return Ok(purchaseOrders);
+        }
+
+        [HttpGet("po-deets")]
+        public async Task<IActionResult> GetPODetails()
+        {
+            var poDetails = await _purchaseOrderService.GetPODetailsAsync();
+            return Ok(poDetails);
         }
 
         [HttpPost]
