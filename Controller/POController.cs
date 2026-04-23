@@ -21,20 +21,35 @@ namespace jvPo.Controller
             _purchaseOrderService = purchaseOrderService;
             _context = context;
         }
-        [HttpGet("pos")]
+        [HttpGet]
         public async Task<IActionResult> GetPurchaseOrders()
         {
             var purchaseOrders = await _purchaseOrderService.GetPurchaseOrdersAsync();
             return Ok(purchaseOrders);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetPurchaseOrderById(int id)
+        {
+            var purchaseOrder = await _purchaseOrderService.GetPOByIdAsync(id);
+            if(purchaseOrder == null)
+                return NotFound("PO not found.");
+            
+            return Ok(purchaseOrder);
+        }
 
-        [HttpGet("po-deets")]
+        [HttpGet("po-details")]
         public async Task<IActionResult> GetPODetails()
         {
             var poDetails = await _purchaseOrderService.GetPODetailsAsync();
             return Ok(poDetails);
         }
-
+        [HttpGet("po-details/{id}")]
+        public async Task<IActionResult> GetPODetailsById(int id)
+        {
+            var podeets = await _purchaseOrderService.GetPODetailsAsyncId(id);
+            if(podeets == null) return NotFound("PO details not found.");
+            return Ok(podeets);
+        }
         [HttpPost]
         public async Task<IActionResult> AddPurchaseOrderAsync(PODto dto)
         {
