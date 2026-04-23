@@ -125,36 +125,44 @@ namespace jvPo.Application.Services
             return $"PO-{lastNumber + 1:D5}";
         }
 
-        public async Task<IEnumerable<object>> GetPOByIdAsync(int id)
+        public async Task<object?> GetPOByIdAsync(int id)
         {
-            var pos = await _context.POs
-                                    .Include(po => po.Supplier)
-                                    .Include(po => po.Terms)
-                                    .Include(po => po.Address)
-                                    .Include(po => po.PODetails).FirstOrDefaultAsync(p => p.Id == id);
-           if(pos == null)
-            {
-                return Enumerable.Empty<object>();
-            }
+            return await _context.POs
+                                    .Where(po => po.Id == id)
+                                    .Select(po => new
+                                    {
+                                        po.Id,
+                                        po.PONumber,
+                                        po.PODate,
+                                        po.SupplierId,
+                                        po.Supplier.SupplierName,
+                                        po.Terms.Term,
+                                        po.DeliveryAddressID,
+                                        DeliveryAddress = po.Address.Address,
+                                        po.RequestedBy,
+                                        po.OrderBy,
+                                        po.RONumber,
+                                        po.RODate,
+                                        po.TotalAmount,
+                                        po.Remarks,
+                                        PODetails = po.PODetails.Select(d => new
+                                        {
+                                            d.Id,
+                                            d.POId,
+                                            d.PONumber,
+                                            d.CompanyId,
+                                            d.CompanyCode,
+                                            d.Quantity,
+                                            d.Unit,
+                                            d.Description,
+                                            d.Price,
+                                            d.Total
+                                        })
+                                    })
+                                    .AsNoTracking()
+                                    .FirstOrDefaultAsync(p => p.Id == id);
 
-            var result = new
-            {
-                pos.Id,
-                pos.PONumber,
-                pos.PODate,
-                pos.SupplierId,
-                pos.Supplier.SupplierName,
-                pos.Terms.Term,
-                pos.DeliveryAddressID,
-                pos.Address.Address,
-                pos.RequestedBy,
-                pos.OrderBy,
-                pos.RONumber,
-                pos.RODate,
-                pos.TotalAmount,
-                pos.Remarks,
-            };
-            return new[]{pos};
+
 
         }
 
@@ -185,12 +193,7 @@ namespace jvPo.Application.Services
 
         public async Task<IEnumerable<object>> GetPurchaseOrdersAsync()
         {
-            var pos = await _context.POs
-            .Include(po => po.Supplier)
-            .Include(po => po.Terms)
-            .Include(po => po.Address)
-            .Include(po => po.PODetails)
-
+            return await _context.POs
             .Select(po => new
             {
                 po.Id,
@@ -223,7 +226,7 @@ namespace jvPo.Application.Services
             })
             .ToListAsync();
 
-            return pos;
+
         }
 
         public async Task<(bool Sucess, string Message)> UpdatePurchaseOrderAsync(PODto dto)
