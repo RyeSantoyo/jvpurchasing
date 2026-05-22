@@ -1,12 +1,15 @@
+using DevExpress.XtraReports;
+using jvPo.Application.Interface;
+using jvPo.Models;
+using jvPo.Models.DTO;
+using jvPo.Report;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using jvPo.Application.Interface;
-using jvPo.Models;
-using jvPo.Models.DTO;
-using Microsoft.EntityFrameworkCore;
 
 namespace jvPo.Application.Services
 {
@@ -191,42 +194,65 @@ namespace jvPo.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<object>> GetPurchaseOrdersAsync()
+        public async Task<IEnumerable<PODto>> GetPurchaseOrdersAsync()
         {
             return await _context.POs
-            .Select(po => new
+            .Select(po => new PODto
             {
-                po.Id,
-                po.PONumber,
-                po.PODate,
-                po.SupplierId,
-                po.Supplier.SupplierName,
-                po.Terms.Term,
-                po.DeliveryAddressID,
-                DeliveryAddress = po.Address.Address,
-                po.RequestedBy,
-                po.OrderBy,
-                po.RONumber,
-                po.RODate,
-                po.TotalAmount,
-                po.Remarks,
-                PODetails = po.PODetails.Select(detail => new
+                POID= po.Id,
+                CompanyId = po.CompanyId,
+                CompanyCode = po.CompanyCode,
+                PONumber = po.PONumber,
+                PODate = po.PODate,
+                SupplierId = po.SupplierId,
+                DeliveryId = po.DeliveryAddressID,
+                DeliveryAddress = po.DeliveryAddress,
+                TermsId = po.TermsId,
+                AgreedTerms = po.AgreedTerms,
+                RequestedBy = po.RequestedBy,
+                OrderBy = po.OrderBy,
+                RONumber = po.RONumber,
+                RODate = po.RODate,
+                TotalAmount = po.TotalAmount,
+                Remarks = po.Remarks,
+                PODetails = po.PODetails.Select(d=> new PODetailsDTO
                 {
-                    detail.Id,
-                    detail.Quantity,
-                    detail.Unit,
-                    detail.Description,
-                    detail.CompanyId,
-                    detail.POId,
-                    detail.CompanyCode,
-                    detail.Price,
-                    detail.Total,
-                    detail.PONumber
+                     POId = d.POId,
+                     CompanyId = d.CompanyId,
+                     CompanyCode = d.CompanyCode,
+                     Quantity = d.Quantity,
+                     Unit = d.Unit,
+                     Description = d.Description,
+                     Price = d.Price,
+                     Total = d.Total,
+                     PONumber = d.PONumber
                 }).ToList()
-            })
-            .ToListAsync();
+            }).ToListAsync();
+        }
 
+                //         PODetails = po.PODetails.Select(detail => new
+                // {
+                //     detail.Id,
+                //     detail.Quantity,
+                //     detail.Unit,
+                //     detail.Description,
+                //     detail.CompanyId,
+                //     detail.POId,
+                //     detail.CompanyCode,
+                //     detail.Price,
+                //     detail.Total,
+                //     detail.PONumber
+                // }).ToList()
 
+        public ViewPODetails PreviewPo(string poNumber)
+        {
+            var report = new ViewPODetails();
+            report.Parameters["PONumber"].Value = poNumber;
+            report.Parameters["PONumber"].Visible = false;
+
+            report.RequestParameters = false;
+
+            return report;
         }
 
         public async Task<(bool Sucess, string Message)> UpdatePurchaseOrderAsync(PODto dto)
@@ -240,5 +266,7 @@ namespace jvPo.Application.Services
 
             return (true, "Success");
         }
+
+
     }
 }

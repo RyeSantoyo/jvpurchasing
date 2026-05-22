@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using jvPo.Models;
 using jvPo.Models.DTO;
+using jvPo.Report;
+using Microsoft.AspNetCore.Mvc;
 
 namespace jvPo.Application.Interface
 {
     public interface IPurchaseOrder
     {
-     Task<IEnumerable<object>> GetPurchaseOrdersAsync();
+     Task<IEnumerable<PODto>> GetPurchaseOrdersAsync();
      Task<object?> GetPOByIdAsync(int id);
      Task<string> GeneratePONumberAsync();
      Task<(bool Success, string Message, string poNumber)> AddPurchaseOrderAsync(PODto dto);
@@ -17,5 +19,6 @@ namespace jvPo.Application.Interface
      Task<(bool Success, string Message)> DeletePurchaseOrderAsync (int id);
      Task<IEnumerable<object>> GetPODetailsAsync();
      Task<IEnumerable<object>> GetPODetailsAsyncId(int id);
+     ViewPODetails PreviewPo(string poNumber);
     }
 }
