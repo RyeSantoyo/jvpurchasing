@@ -12,13 +12,6 @@ namespace jvPo.Report
         {
             InitializeComponent();
         }
-
-        public ViewPODetails(string poNumber)
-        {
-            InitializeComponent();
-            // You can use the poNumber to fetch data and set it as the DataSource for the report
-            // For example:
-            // this.DataSource = FetchPODetails(poNumber);
-        }
+        
     }
 }
