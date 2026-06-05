@@ -35,7 +35,7 @@ namespace jvPo.Application.Services
 
             return supplier;
         }
-//for testing
+
         public async Task<(bool Success, string Message)> AddSupplierAsync(SupplierDTO dto)
         {
             if (dto == null)
