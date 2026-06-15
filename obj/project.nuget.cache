@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+m+6yXasWFg=",
+  "dgSpecHash": "xUQlX57w+oU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\John\\Desktop\\jvPo\\jvPo.csproj",
+  "projectFilePath": "C:\\Users\\John\\Desktop\\Jovic\\jvPo\\jvPo.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\John\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\John\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\John\\Desktop\\jvPo\\jvPo.csproj": {}
+    "C:\\Users\\John\\Desktop\\Jovic\\jvPo\\jvPo.csproj": {}
   },
   "projects": {
-    "C:\\Users\\John\\Desktop\\jvPo\\jvPo.csproj": {
+    "C:\\Users\\John\\Desktop\\Jovic\\jvPo\\jvPo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\John\\Desktop\\jvPo\\jvPo.csproj",
+        "projectUniqueName": "C:\\Users\\John\\Desktop\\Jovic\\jvPo\\jvPo.csproj",
         "projectName": "jvPo",
-        "projectPath": "C:\\Users\\John\\Desktop\\jvPo\\jvPo.csproj",
+        "projectPath": "C:\\Users\\John\\Desktop\\Jovic\\jvPo\\jvPo.csproj",
         "packagesPath": "C:\\Users\\John\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\John\\Desktop\\jvPo\\obj\\",
+        "outputPath": "C:\\Users\\John\\Desktop\\Jovic\\jvPo\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages",
@@ -100,7 +100,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.311/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
