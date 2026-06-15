@@ -131,7 +131,6 @@ namespace jvPo.Application.Services
         public async Task<object?> GetPOByIdAsync(int id)
         {
             return await _context.POs
-                                    .Where(po => po.Id == id)
                                     .Select(po => new
                                     {
                                         po.Id,
@@ -163,9 +162,7 @@ namespace jvPo.Application.Services
                                         })
                                     })
                                     .AsNoTracking()
-                                    .FirstOrDefaultAsync(p => p.Id == id);
-
-
+                                    .FirstOrDefaultAsync(po => po.Id == id);
 
         }
 
@@ -194,12 +191,17 @@ namespace jvPo.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<PODto>> GetPurchaseOrdersAsync()
+        public async Task<IEnumerable<PODto>> GetPurchaseOrdersAsync(int pageNumber, int pageSize)
         {
+
             return await _context.POs
+            .AsNoTracking()
+            .OrderByDescending(po => po.PODate)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .Select(po => new PODto
             {
-                POID= po.Id,
+                POID = po.Id,
                 CompanyId = po.CompanyId,
                 CompanyCode = po.CompanyCode,
                 PONumber = po.PONumber,
@@ -215,34 +217,36 @@ namespace jvPo.Application.Services
                 RODate = po.RODate,
                 TotalAmount = po.TotalAmount,
                 Remarks = po.Remarks,
-                PODetails = po.PODetails.Select(d=> new PODetailsDTO
-                {
-                     POId = d.POId,
-                     CompanyId = d.CompanyId,
-                     CompanyCode = d.CompanyCode,
-                     Quantity = d.Quantity,
-                     Unit = d.Unit,
-                     Description = d.Description,
-                     Price = d.Price,
-                     Total = d.Total,
-                     PONumber = d.PONumber
-                }).ToList()
-            }).ToListAsync();
+                // PODetails = po.PODetails.Select(d => new PODetailsDTO
+                // {
+                //     POId = d.POId,
+                //     CompanyId = d.CompanyId,
+                //     CompanyCode = d.CompanyCode,
+                //     Quantity = d.Quantity,
+                //     Unit = d.Unit,
+                //     Description = d.Description,
+                //     Price = d.Price,
+                //     Total = d.Total,
+                //     PONumber = d.PONumber
+                // }).ToList()
+            })
+            .ToListAsync();
+
         }
 
-                //         PODetails = po.PODetails.Select(detail => new
-                // {
-                //     detail.Id,
-                //     detail.Quantity,
-                //     detail.Unit,
-                //     detail.Description,
-                //     detail.CompanyId,
-                //     detail.POId,
-                //     detail.CompanyCode,
-                //     detail.Price,
-                //     detail.Total,
-                //     detail.PONumber
-                // }).ToList()
+        //         PODetails = po.PODetails.Select(detail => new
+        // {
+        //     detail.Id,
+        //     detail.Quantity,
+        //     detail.Unit,
+        //     detail.Description,
+        //     detail.CompanyId,
+        //     detail.POId,
+        //     detail.CompanyCode,
+        //     detail.Price,
+        //     detail.Total,
+        //     detail.PONumber
+        // }).ToList()
 
         public ViewPODetails PreviewPo(string poNumber)
         {

@@ -22,9 +22,11 @@ namespace jvPo.Controller
             _context = context;
         }
         [HttpGet]
-        public async Task<IActionResult> GetPurchaseOrders()
+        public async Task<IActionResult> GetPurchaseOrders([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var purchaseOrders = await _purchaseOrderService.GetPurchaseOrdersAsync();
+            if (pageSize > 100)
+                pageSize = 100;
+            var purchaseOrders = await _purchaseOrderService.GetPurchaseOrdersAsync(pageNumber, pageSize);
             return Ok(purchaseOrders);
         }
         [HttpGet("{id}")]
