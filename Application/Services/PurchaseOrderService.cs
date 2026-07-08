@@ -202,7 +202,7 @@ public async Task<IEnumerable<PODetailsDTO>> GetPODetailsAsync(int pageNumber, i
 
             return await _context.POs
             .AsNoTracking()
-            .OrderByDescending(po => po.PODate)
+            .OrderByDescending(po => po.Id)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .Select(po => new PODto
@@ -214,7 +214,7 @@ public async Task<IEnumerable<PODetailsDTO>> GetPODetailsAsync(int pageNumber, i
                 PODate = po.PODate,
                 SupplierId = po.SupplierId,
                 DeliveryId = po.DeliveryAddressID,
-                DeliveryAddress = po.DeliveryAddress,
+                DeliveryAddress = string.IsNullOrEmpty(po.Address.Address) ? "N/A" : po.Address.Address.Trim(),
                 TermsId = po.TermsId,
                 AgreedTerms = po.AgreedTerms,
                 RequestedBy = po.RequestedBy,

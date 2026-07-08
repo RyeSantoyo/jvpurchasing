@@ -21,7 +21,10 @@
                     <tr>
                         <th>Order ID</th>
                         <th>PO Number</th>
+                        <th>Delivery Address</th>
+                        <th>Agreed Terms</th>
                         <th>Total Amount</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,10 +47,12 @@
         $(document).ready(function () {
             // Initialize DataTables with advanced configurations
             dataTableInstance = $('#potable').DataTable({
+                "order": [[0, "desc"]], // Default sorting on the first column (Order ID) in descending order
                 "processing": true, // Displays a loading indicator while fetching data
                 "responsive": true, // Automatically hides columns gracefully on smaller screens
                 "ajax": {
-                    "url": "/api/po/po-details", // Backend API endpoint for fetching purchase orders
+                    //"url": "/api/po/po-details", // Backend API endpoint for fetching purchase orders
+                    "url": "/api/po/purchaseorder",
                     "dataSrc": "", // Tells DataTables that the API returns a flat JSON array
                     "error": function (xhr, error, thrown) {
                         console.error("API Error: ", xhr.status, thrown);
@@ -56,15 +61,23 @@
                 },
                 "columns": [
                     { 
-                        "data": "poId",
+                        "data": "poid",
                         "className": "text-center fw-bold"
                     },
                     { 
                         "data": "poNumber", 
                     },
                     { 
-                        "data": "total",
-                        "className": "text-end",
+                        "data": "deliveryAddress",
+                        "className": "text-center"
+                    },
+                    {
+                        "data" : "agreedTerms",
+                        "className": "text-center"
+                    },
+                    { 
+                        "data": "totalAmount",
+                        "className": "text-center fw-bold",
                         "render": function (data, type, row) {
                             // Automatically formats numbers into a currency format ($#,##0.00)
                             if (type === 'display' && data !== null) {
@@ -76,6 +89,7 @@
                             return data;
                         }
                     }
+
                 ],
                 "language": {
                     "emptyTable": "No purchase orders found matching this criteria.",

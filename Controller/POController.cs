@@ -21,7 +21,8 @@ namespace jvPo.Controller
             _purchaseOrderService = purchaseOrderService;
             _context = context; 
         }
-        [HttpGet]
+        
+        [HttpGet("purchaseorder")]
         public async Task<IActionResult> GetPurchaseOrders([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             if (pageSize > 100)
@@ -40,7 +41,7 @@ namespace jvPo.Controller
         }
 
         [HttpGet("po-details")]
-        public async Task<IActionResult> GetPODetails([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 100)
+        public async Task<IActionResult> GetPODetails([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 200)
         {
             if (pageSize > 100)
                 pageSize = 100;

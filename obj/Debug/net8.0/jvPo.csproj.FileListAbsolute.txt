@@ -206,3 +206,5 @@ C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.csproj.GenerateResource.c
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.genruntimeconfig.cache
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\ref\jvPo.dll
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.Report.ViewPODetails.resources
+C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.RazorAssemblyInfo.cache
+C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.RazorAssemblyInfo.cs
