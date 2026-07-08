@@ -33,7 +33,7 @@ namespace jvPo.Application.Services
             var suppDict = await _context.Suppliers.ToDictionaryAsync(s => s.SupplierName.Trim().ToLower(), s => s.Id);
             var termsDict = await _context.Terms.ToDictionaryAsync(t => t.Term.Trim().ToLower(), t => t.Id);
             var addressDict = await _context.DeliveryAddresses.ToDictionaryAsync(t => t.Address.Trim().ToLower(), t => t.Id);
-
+            var existingPoNumbers = (await _context.POs.Select(p => p.PONumber.Trim()).ToListAsync()).ToHashSet();
             int processedCount = 0;
             int batchSize = 500;
             foreach (var oldItem in legacyRows)
@@ -49,10 +49,10 @@ namespace jvPo.Application.Services
                 {
                     if (addressDict.TryGetValue(legacyAddress, out int newAddressId))
                     {
-                        bool exists = await _context.POs.AnyAsync(x => x.PONumber == searchPONO);
-                        if (!exists)
+                        if (!existingPoNumbers.Contains(searchPONO))
                         {
                             termsDict.TryGetValue(legacyTerms, out int newTermsId);
+
                             var newItem = new PO
                             {
                                 PONumber = searchPONO,

@@ -19,7 +19,7 @@ namespace jvPo.Controller
         public POController(IPurchaseOrder purchaseOrderService, ApplicationDbContext context)
         {
             _purchaseOrderService = purchaseOrderService;
-            _context = context;
+            _context = context; 
         }
         [HttpGet]
         public async Task<IActionResult> GetPurchaseOrders([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
@@ -40,9 +40,11 @@ namespace jvPo.Controller
         }
 
         [HttpGet("po-details")]
-        public async Task<IActionResult> GetPODetails()
+        public async Task<IActionResult> GetPODetails([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 100)
         {
-            var poDetails = await _purchaseOrderService.GetPODetailsAsync();
+            if (pageSize > 100)
+                pageSize = 100;
+            var poDetails = await _purchaseOrderService.GetPODetailsAsync(pageNumber, pageSize);
             return Ok(poDetails);
         }
         [HttpGet("po-details/{id}")]

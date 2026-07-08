@@ -5,6 +5,7 @@ using jvPo.Models.DTO;
 using jvPo.Report;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -166,27 +167,32 @@ namespace jvPo.Application.Services
 
         }
 
-        public async Task<IEnumerable<object>> GetPODetailsAsync()
+public async Task<IEnumerable<PODetailsDTO>> GetPODetailsAsync(int pageNumber, int pageSize)
+{
+    var pod = await _context.PODetails
+        .AsNoTracking()
+        .GroupBy(d => new { d.POId, d.PONumber, d.CompanyId, d.CompanyCode })
+        .Select(g => new PODetailsDTO
         {
+            POId = g.Key.POId,
+            PONumber = g.Key.PONumber,
+            CompanyId = g.Key.CompanyId,
+            CompanyCode = g.Key.CompanyCode,
+            Total = g.Sum(x => x.Total),
+            Quantity = g.Sum(x => x.Quantity),
+            Unit = string.IsNullOrEmpty(g.FirstOrDefault()!.Unit) ? "N/A" : g.FirstOrDefault()!.Unit.Trim(),
+            Description = "Order Summary", 
+            Price = g.Average(x => x.Price)
+        })
+        .OrderByDescending(po => po.POId)
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
 
-            var pod = await _context.PODetails.Select(d => new
-            {
-                d.Id,
-                d.POId,
-                d.PONumber,
-                d.CompanyId,
-                d.CompanyCode,
-                d.Quantity,
-                d.Unit,
-                d.Description,
-                d.Price,
-                d.Total
-            }).OrderBy(d => d.PONumber).ToListAsync();
-            return pod;
+    return pod;
+}
 
-        }
-
-        public Task<IEnumerable<object>> GetPODetailsAsyncId(int id)
+        public async Task<IEnumerable<PODetailsDTO>> GetPODetailsAsyncId(int id)
         {
             throw new NotImplementedException();
         }
