@@ -4,48 +4,85 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - JV Purchasing</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <style>
-        body { display: flex; min-height: 100vh; flex-direction: column; }
-        .wrapper { display: flex; flex: 1; }
-        .sidebar { min-width: 250px; background: #212529; color: #fff; }
-        .sidebar .nav-link { color: #rgba(255,255,255,.75); }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background: #343a40; }
-        .content-area { flex: 1; padding: 20px; background-color: #f8f9fa; }
+        body { 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .content-area { 
+            background-color: #f8f9fa; 
+        }
+        /* Style fixes for navigation menu item anchors inside dark elements */
+        .nav-link { 
+            color: rgba(255, 255, 255, 0.75); 
+        }
+        .nav-link:hover, .nav-link.active { 
+            color: #fff !important; 
+            background-color: #343a40 !important; 
+        }
     </style>
 </head>
 <body>
 
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow-sm">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="/Index">JV Purchasing System</a>
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-2 p-md-0 shadow-sm row m-0 align-items-center">
+        <div class="d-flex justify-content-between align-items-center w-100 px-3">
+            <a class="navbar-brand col-md-3 col-lg-2 me-0 fs-6 py-2" href="/Index">JV Purchasing System</a>
+            
+            <button class="navbar-toggler d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+        <div class="collapse d-md-none px-3 pb-3" id="mobileSidebar">
+            <div class="bg-dark pt-3 border-top border-secondary">
+                <ul class="nav nav-pills flex-column gap-1">
+                    <li class="nav-item">
+                        <a href="/Index" class="nav-link py-2">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/PurchaseOrder" class="nav-link py-2">Purchase Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/VendorManagement" class="nav-link py-2">Vendors Management</a>
+                    </li>
+                </ul>
+                <div class="text-muted small mt-3 pt-2 border-top border-secondary">Migration Environment</div>
+            </div>
+        </div>
     </header>
 
-    <div class="wrapper">
-        <nav class="sidebar p-3 d-flex flex-column">
-            <h5 class="text-uppercase text-muted fs-7 mb-3">Navigation</h5>
-            <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item">
-                    <a href="/Index" class="nav-link">Dashboard</a>
-                </li>
-                <li>
-                    <a href="/PurchaseOrders" class="nav-link">Purchase Orders</a>
-                </li>
-                <li>
-                    <a href="/Vendors" class="nav-link">Vendors Management</a>
-                </li>
-            </ul>
-            <hr>
-            <div class="text-muted small">Migration Environment</div>
-        </nav>
+    <div class="container-fluid flex-grow-1 d-flex flex-column">
+        <div class="row flex-grow-1">
+            
+            <nav class="col-md-3 col-lg-2 d-none d-md-flex flex-column p-3 bg-dark text-white content-sidebar min-vh-100">
+                <h5 class="text-uppercase text-muted small tracking-wider mb-3">Navigation</h5>
+                <ul class="nav nav-pills flex-column mb-auto gap-1">
+                    <li class="nav-item">
+                        <a href="/Index" class="nav-link">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/PurchaseOrder" class="nav-link">Purchase Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/VendorManagement" class="nav-link">Vendors Management</a>
+                    </li>
+                </ul>
+                <hr class="text-secondary">
+                <div class="text-muted small">Migration Environment</div>
+            </nav>
 
-        <main class="content-area">
-            <div class="container-fluid bg-white p-4 rounded shadow-sm">
-                @RenderBody() 
-            </div>
-        </main>
+            <main class="col-12 col-md-9 col-lg-10 ms-sm-auto content-area p-3 p-md-4 flex-grow-1">
+                <div class="container-fluid bg-white p-3 p-md-4 rounded shadow-sm">
+                    @RenderBody() 
+                </div>
+            </main>
+            
+        </div>
     </div>
 
-    <footer class="footer border-top text-muted bg-white text-center py-2 small">
+    <footer class="footer border-top text-muted bg-white text-center py-2 small w-100 mt-auto">
         &copy; @DateTime.Now.Year - JV Purchasing Migration Project
     </footer>
 
