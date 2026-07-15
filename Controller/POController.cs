@@ -19,9 +19,10 @@ namespace jvPo.Controller
         public POController(IPurchaseOrder purchaseOrderService, ApplicationDbContext context)
         {
             _purchaseOrderService = purchaseOrderService;
-            _context = context; 
+            _context = context;
         }
-        
+
+
         [HttpGet("purchaseorder")]
         public async Task<IActionResult> GetPurchaseOrders([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
@@ -30,13 +31,14 @@ namespace jvPo.Controller
             var purchaseOrders = await _purchaseOrderService.GetPurchaseOrdersAsync(pageNumber, pageSize);
             return Ok(purchaseOrders);
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPurchaseOrderById(int id)
         {
             var purchaseOrder = await _purchaseOrderService.GetPOByIdAsync(id);
-            if(purchaseOrder == null)
+            if (purchaseOrder == null)
                 return NotFound("PO not found.");
-            
+
             return Ok(purchaseOrder);
         }
 
@@ -52,19 +54,19 @@ namespace jvPo.Controller
         public async Task<IActionResult> GetPODetailsById(int id)
         {
             var podeets = await _purchaseOrderService.GetPODetailsAsyncId(id);
-            if(podeets == null) return NotFound("PO details not found.");
+            if (podeets == null) return NotFound("PO details not found.");
             return Ok(podeets);
         }
         [HttpPost]
         public async Task<IActionResult> AddPurchaseOrderAsync(PODto dto)
         {
-            if(dto == null)
+            if (dto == null)
                 return BadRequest("PO is empty.");
-            
+
             var result = await _purchaseOrderService.AddPurchaseOrderAsync(dto);
-            if(!result.Success)
+            if (!result.Success)
                 return BadRequest(result.Message.ToString());
-            
+
             return Ok(result.Message);
         }
 
@@ -72,15 +74,15 @@ namespace jvPo.Controller
 
         public async Task<IActionResult> DeletePurchaseOrderAsync(int id)
         {
-            if(id<=0)
+            if (id <= 0)
                 return BadRequest("Not available");
             var result = await _purchaseOrderService.DeletePurchaseOrderAsync(id);
 
-            if(!result.Success)
+            if (!result.Success)
                 return NotFound(result.Message);
-            
+
             return Ok();
-            
+
         }
     }
 }

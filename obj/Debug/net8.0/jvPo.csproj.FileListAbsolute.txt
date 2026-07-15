@@ -23,7 +23,6 @@ C:\Users\John\Desktop\Jovic\jvPo\bin\Debug\net8.0\runtimes\win\lib\net8.0\System
 C:\Users\John\Desktop\Jovic\jvPo\bin\Debug\net8.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
 C:\Users\John\Desktop\Jovic\jvPo\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\John\Desktop\Jovic\jvPo\bin\Debug\net8.0\appsettings.json
-C:\Users\John\Desktop\Jovic\jvPo\bin\Debug\net8.0\jvPo.staticwebassets.endpoints.json
 C:\Users\John\Desktop\Jovic\jvPo\bin\Debug\net8.0\Azure.Core.dll
 C:\Users\John\Desktop\Jovic\jvPo\bin\Debug\net8.0\Azure.Identity.dll
 C:\Users\John\Desktop\Jovic\jvPo\bin\Debug\net8.0\Dapper.dll
@@ -179,7 +178,6 @@ C:\Users\John\Desktop\Jovic\jvPo\bin\Debug\net8.0\runtimes\win\lib\net6.0\System
 C:\Users\John\Desktop\Jovic\jvPo\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Threading.AccessControl.dll
 C:\Users\John\Desktop\Jovic\jvPo\bin\Debug\net8.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.csproj.AssemblyReference.cache
-C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\rpswa.dswa.cache.json
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.AssemblyInfoInputs.cache
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.AssemblyInfo.cs
@@ -187,14 +185,9 @@ C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.csproj.CoreCompileInputs.
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.sourcelink.json
-C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\rjimswa.dswa.cache.json
-C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
-C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\scopedcss\bundle\jvPo.styles.css
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\staticwebassets.build.json
-C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\staticwebassets.development.json
-C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.csproj.Up2Date
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.dll
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\refint\jvPo.dll
@@ -208,3 +201,10 @@ C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\ref\jvPo.dll
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.Report.ViewPODetails.resources
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.RazorAssemblyInfo.cache
 C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\jvPo.RazorAssemblyInfo.cs
+C:\Users\John\Desktop\Jovic\jvPo\bin\Debug\net8.0\jvPo.staticwebassets.endpoints.json
+C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\rjimswa.dswa.cache.json
+C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\staticwebassets.build.json.cache
+C:\Users\John\Desktop\Jovic\jvPo\obj\Debug\net8.0\staticwebassets.build.endpoints.json
