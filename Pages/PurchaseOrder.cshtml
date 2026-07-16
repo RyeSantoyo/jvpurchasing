@@ -5,6 +5,7 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" />
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -25,16 +26,115 @@
                     </tr>
                 </thead>
                 <tbody>
-                    </tbody>
+                </tbody>
             </table>
         </div>
     </div>
-        <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mt-3">
         <button class="btn btn-primary" onclick="refreshTable()">
             <i class="bi bi-arrow-clockwise"></i> Refresh Data
         </button>
     </div>
 </div>
+
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="viewModalLabel"><i class="bi bi-eye"></i> View Purchase Order</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <th style="width: 40%;">Order ID</th>
+                        <td id="viewPoId"></td>
+                    </tr>
+                    <tr>
+                        <th>PO Number</th>
+                        <td id="viewPoNumber"></td>
+                    </tr>
+                    <tr>
+                        <th>Delivery Address</th>
+                        <td id="viewDeliveryAddress"></td>
+                    </tr>
+                    <tr>
+                        <th>Agreed Terms</th>
+                        <td id="viewAgreedTerms"></td>
+                    </tr>
+                    <tr>
+                        <th>Total Amount</th>
+                        <td id="viewTotalAmount" class="fw-bold text-success"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editForm" onsubmit="submitEdit(event)">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="editModalLabel"><i class="bi bi-pencil-square"></i> Edit Purchase Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editPoId" />
+                    
+                    <div class="mb-3">
+                        <label for="editPoNumber" class="form-label">PO Number</label>
+                        <input type="text" class="form-label form-control" id="editPoNumber" required />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="editDeliveryAddress" class="form-label">Delivery Address</label>
+                        <textarea class="form-control" id="editDeliveryAddress" rows="2" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editAgreedTerms" class="form-label">Agreed Terms</label>
+                        <input type="text" class="form-control" id="editAgreedTerms" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editTotalAmount" class="form-label">Total Amount ($)</label>
+                        <input type="number" step="0.01" class="form-control" id="editTotalAmount" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel"><i class="bi bi-trash"></i> Delete Purchase Order</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete Purchase Order <strong id="deletePoNumSpan"></strong>?</p>
+                <p class="text-danger"><small>This action cannot be undone.</small></p>
+                <input type="hidden" id="deletePoId" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="submitDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
@@ -47,18 +147,16 @@
         let dataTableInstance;
 
         $(document).ready(function () {
-            // Initialize DataTables with advanced configurations
             dataTableInstance = $('#potable').DataTable({
-                "order": [[0, "desc"]], // Default sorting on the first column (Order ID) in descending order
-                "processing": true, // Displays a loading indicator while fetching data
-                "responsive": true, // Automatically hides columns gracefully on smaller screens
+                "order": [[0, "desc"]], 
+                "processing": true, 
+                "responsive": true, 
                 "ajax": {
-                    //"url": "/api/po/po-details", // Backend API endpoint for fetching purchase orders
                     "url": "/api/po/purchaseorder",
-                    "dataSrc": "", // Tells DataTables that the API returns a flat JSON array
+                    "dataSrc": "", 
                     "error": function (xhr, error, thrown) {
                         console.error("API Error: ", xhr.status, thrown);
-                        alert("Failed to load purchase orders from the backend API. Please ensure your endpoint is running.");
+                        alert("Failed to load purchase orders. Ensure API is active.");
                     }
                 },
                 "columns": [
@@ -81,7 +179,6 @@
                         "data": "totalAmount",
                         "className": "text-center fw-bold",
                         "render": function (data, type, row) {
-                            // Automatically formats numbers into a currency format ($#,##0.00)
                             if (type === 'display' && data !== null) {
                                 return new Intl.NumberFormat('en-US', { 
                                     style: 'currency', 
@@ -90,8 +187,33 @@
                             }
                             return data;
                         }
-                    }
+                    },
+                    {
+                        "data": "poid", // Uses the ID to identify which row gets edited/viewed/deleted
+                        "orderable": false,
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            // Escaping single quotes in text properties to prevent JS syntax breaking
+                            const poNumSafe = (row.poNumber || '').replace(/'/g, "\\'");
+                            const addressSafe = (row.deliveryAddress || '').replace(/'/g, "\\'");
+                            const termsSafe = (row.agreedTerms || '').replace(/'/g, "\\'");
+                            const amountSafe = row.totalAmount || 0;
 
+                            return `
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-info text-white" onclick="viewOrder('${data}', '${poNumSafe}', '${addressSafe}', '${termsSafe}', ${amountSafe})">
+                                        <i class="bi bi-eye"></i> View
+                                    </button>
+                                    <button class="btn btn-sm btn-warning" onclick="editOrder('${data}', '${poNumSafe}', '${addressSafe}', '${termsSafe}', ${amountSafe})">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="confirmDelete('${data}', '${poNumSafe}')">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    }
                 ],
                 "language": {
                     "emptyTable": "No purchase orders found matching this criteria.",
@@ -100,11 +222,113 @@
             });
         });
 
-        // Helper function tied to the refresh button
         function refreshTable() {
             if (dataTableInstance) {
-                dataTableInstance.ajax.reload(null, false); // Reloads data without resetting user pagination
+                dataTableInstance.ajax.reload(null, false); 
             }
+        }
+
+        // =========================================================
+        // MODAL OPERATIONS
+        // =========================================================
+
+        // 1. VIEW ACTION
+        function viewOrder(id, poNum, address, terms, amount) {
+            $("#viewPoId").text(id);
+            $("#viewPoNumber").text(poNum);
+            $("#viewDeliveryAddress").text(address);
+            $("#viewAgreedTerms").text(terms);
+            
+            // Format currency inside view modal
+            const formattedAmount = new Intl.NumberFormat('en-US', { 
+                style: 'currency', 
+                currency: 'USD' 
+            }).format(amount);
+            $("#viewTotalAmount").text(formattedAmount);
+
+            // Show Bootstrap modal
+            let viewModal = new bootstrap.Modal(document.getElementById('viewModal'));
+            viewModal.show();
+        }
+
+        // 2. EDIT ACTION (Open modal with current values populated)
+        function editOrder(id, poNum, address, terms, amount) {
+            $("#editPoId").val(id);
+            $("#editPoNumber").val(poNum);
+            $("#editDeliveryAddress").val(address);
+            $("#editAgreedTerms").val(terms);
+            $("#editTotalAmount").val(amount);
+
+            let editModal = new bootstrap.Modal(document.getElementById('editModal'));
+            editModal.show();
+        }
+
+        // 3. EDIT FORM SUBMIT (Sends data to the API backend)
+        function submitEdit(event) {
+            event.preventDefault(); // Stop normal form submit
+
+            const id = $("#editPoId").val();
+            const payload = {
+                poid: parseInt(id), // Matches typical JSON payload structures
+                poNumber: $("#editPoNumber").val(),
+                deliveryAddress: $("#editDeliveryAddress").val(),
+                agreedTerms: $("#editAgreedTerms").val(),
+                totalAmount: parseFloat($("#editTotalAmount").val())
+            };
+
+            $.ajax({
+                url: `/api/po/purchaseorder/${id}`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(payload),
+                success: function (result) {
+                    // Hide the modal
+                    let editModalEl = document.getElementById('editModal');
+                    let modalInstance = bootstrap.Modal.getInstance(editModalEl);
+                    modalInstance.hide();
+
+                    // Refresh table & notify
+                    refreshTable();
+                    alert("Purchase Order updated successfully!");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Update failed:", xhr.status, error);
+                    alert("Failed to update the purchase order. Check backend connection.");
+                }
+            });
+        }
+
+        // 4. DELETE CONFIRMATION ACTION
+        function confirmDelete(id, poNum) {
+            $("#deletePoId").val(id);
+            $("#deletePoNumSpan").text(poNum);
+
+            let deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+
+        // 5. SUBMIT DELETE TO API
+        function submitDelete() {
+            const id = $("#deletePoId").val();
+
+            $.ajax({
+                url: `/api/po/purchaseorder/${id}`,
+                type: 'DELETE',
+                success: function (result) {
+                    // Hide modal
+                    let deleteModalEl = document.getElementById('deleteModal');
+                    let modalInstance = bootstrap.Modal.getInstance(deleteModalEl);
+                    modalInstance.hide();
+
+                    // Refresh table & notify
+                    refreshTable();
+                    alert("Purchase Order deleted successfully.");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Delete failed:", xhr.status, error);
+                    alert("Failed to delete purchase order.");
+                }
+            });
         }
     </script>
 }

@@ -167,30 +167,30 @@ namespace jvPo.Application.Services
 
         }
 
-public async Task<IEnumerable<PODetailsDTO>> GetPODetailsAsync(int pageNumber, int pageSize)
-{
-    var pod = await _context.PODetails
-        .AsNoTracking()
-        .GroupBy(d => new { d.POId, d.PONumber, d.CompanyId, d.CompanyCode })
-        .Select(g => new PODetailsDTO
+        public async Task<IEnumerable<PODetailsDTO>> GetPODetailsAsync(int pageNumber, int pageSize)
         {
-            POId = g.Key.POId,
-            PONumber = g.Key.PONumber,
-            CompanyId = g.Key.CompanyId,
-            CompanyCode = g.Key.CompanyCode,
-            Total = g.Sum(x => x.Total),
-            Quantity = g.Sum(x => x.Quantity),
-            Unit = string.IsNullOrEmpty(g.FirstOrDefault()!.Unit) ? "N/A" : g.FirstOrDefault()!.Unit.Trim(),
-            Description = "Order Summary", 
-            Price = g.Average(x => x.Price)
-        })
-        .OrderByDescending(po => po.POId)
-        .Skip((pageNumber - 1) * pageSize)
-        .Take(pageSize)
-        .ToListAsync();
+            var pod = await _context.PODetails
+                .AsNoTracking()
+                .GroupBy(d => new { d.POId, d.PONumber, d.CompanyId, d.CompanyCode, d.Description })
+                .Select(g => new PODetailsDTO
+                {
+                    POId = g.Key.POId,
+                    PONumber = g.Key.PONumber,
+                    CompanyId = g.Key.CompanyId,
+                    CompanyCode = g.Key.CompanyCode,
+                    Total = g.Sum(x => x.Total),
+                    Quantity = g.Sum(x => x.Quantity),
+                    Unit = string.IsNullOrEmpty(g.FirstOrDefault()!.Unit) ? "N/A" : g.FirstOrDefault()!.Unit.Trim(),
+                    Description = string.IsNullOrEmpty(g.Key.Description) ? "N/A" : g.Key.Description.Trim(),
+                    Price = g.Average(x => x.Price)
+                })
+                .OrderByDescending(po => po.POId)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
-    return pod;
-}
+            return pod;
+        }
 
         public async Task<IEnumerable<PODetailsDTO>> GetPODetailsAsyncId(int id)
         {
@@ -201,6 +201,7 @@ public async Task<IEnumerable<PODetailsDTO>> GetPODetailsAsync(int pageNumber, i
         {
 
             return await _context.POs
+
             .AsNoTracking()
             .OrderByDescending(po => po.Id)
             .Skip((pageNumber - 1) * pageSize)
@@ -216,7 +217,7 @@ public async Task<IEnumerable<PODetailsDTO>> GetPODetailsAsync(int pageNumber, i
                 DeliveryId = po.DeliveryAddressID,
                 DeliveryAddress = string.IsNullOrEmpty(po.Address.Address) ? "N/A" : po.Address.Address.Trim(),
                 TermsId = po.TermsId,
-                AgreedTerms = po.AgreedTerms,
+                AgreedTerms = string.IsNullOrEmpty(po.Terms.Term) ? "N/A" : po.Terms.Term.Trim(),
                 RequestedBy = po.RequestedBy,
                 OrderBy = po.OrderBy,
                 RONumber = po.RONumber,
@@ -240,19 +241,64 @@ public async Task<IEnumerable<PODetailsDTO>> GetPODetailsAsync(int pageNumber, i
 
         }
 
-        //         PODetails = po.PODetails.Select(detail => new
-        // {
-        //     detail.Id,
-        //     detail.Quantity,
-        //     detail.Unit,
-        //     detail.Description,
-        //     detail.CompanyId,
-        //     detail.POId,
-        //     detail.CompanyCode,
-        //     detail.Price,
-        //     detail.Total,
-        //     detail.PONumber
-        // }).ToList()
+        public async Task<(IEnumerable<PODto> Data, int TotalRecord, int FilteredRecord)> GetPurchaseOrdersAsync(int skip, int take, string? searchValue, string? sortColumn, string? sortDirection)
+        {
+            var query = _context.POs.AsNoTracking();
+
+            int totalRecords = await query.CountAsync();
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                searchValue = searchValue.ToLower();
+
+                query = query.Where(po =>
+                po.PONumber.ToLower().Contains(searchValue) ||
+                po.RequestedBy.ToLower().Contains(searchValue) ||
+                (po.Address != null && po.Address.Address.ToLower().Contains(searchValue))
+                );
+
+            }
+
+            int recordsFiltered = await query.CountAsync();
+
+            if (!string.IsNullOrWhiteSpace(sortColumn) && !string.IsNullOrWhiteSpace(sortDirection))
+            {
+                bool isDescending = sortDirection.ToLower() == "desc";
+                query = sortColumn.ToLower() switch
+                {
+                    "ponumber" => isDescending ? query.OrderByDescending(po => po.PONumber) : query.OrderBy(po => po.PONumber),
+                    "podate" => isDescending ? query.OrderByDescending(po => po.PODate) : query.OrderBy(po => po.PODate),
+                    "totalamount" => isDescending ? query.OrderByDescending(po => po.TotalAmount) : query.OrderBy(po => po.TotalAmount),
+                    _ => isDescending ? query.OrderByDescending(po => po.Id) : query.OrderBy(po => po.Id)
+                };
+            }
+            else
+            {
+                query = query.OrderByDescending(po => po.Id);
+            }
+
+            var data = await query.Skip(skip).Take(take)
+                .Select(po => new PODto
+                {
+                    POID = po.Id,
+                    CompanyId = po.CompanyId,
+                    CompanyCode = po.CompanyCode,
+                    PONumber = po.PONumber,
+                    PODate = po.PODate,
+                    SupplierId = po.SupplierId,
+                    DeliveryId = po.DeliveryAddressID,
+                    DeliveryAddress = string.IsNullOrEmpty(po.Address.Address) ? "N/A" : po.Address.Address.Trim(),
+                    TermsId = po.TermsId,
+                    AgreedTerms = po.AgreedTerms,
+                    RequestedBy = po.RequestedBy,
+                    OrderBy = po.OrderBy,
+                    RONumber = po.RONumber,
+                    RODate = po.RODate,
+                    TotalAmount = po.TotalAmount,
+                    Remarks = po.Remarks
+                }).ToListAsync();
+                    return (data, totalRecords, recordsFiltered);
+        }
 
         public ViewPODetails PreviewPo(string poNumber)
         {
@@ -265,7 +311,7 @@ public async Task<IEnumerable<PODetailsDTO>> GetPODetailsAsync(int pageNumber, i
             return report;
         }
 
-        public async Task<(bool Sucess, string Message)> UpdatePurchaseOrderAsync(PODto dto)
+        public async Task<(bool Success, string Message)> UpdatePurchaseOrderAsync(PODto dto)
         {
             if (dto == null)
                 return (false, "Not available");

@@ -23,7 +23,7 @@ namespace jvPo.Controller
             _supplierService = supplierService;
         }
 
-        [HttpGet]
+        [HttpGet("vendors")]
         public async Task<IActionResult> GetSuppliers()
         {
             var suppliers = await _supplierService.GetSuppliersAsync();
