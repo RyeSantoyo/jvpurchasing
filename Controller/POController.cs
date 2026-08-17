@@ -23,15 +23,31 @@ namespace jvPo.Controller
         }
 
 
-        [HttpGet("purchaseorder")]
-        public async Task<IActionResult> GetPurchaseOrders([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        [HttpGet("purchaseorder")] 
+        public async Task<IActionResult> GetPurchaseOrders(
+            [FromQuery] int draw,
+            [FromQuery] int start,
+            [FromQuery] int length,
+            [FromQuery(Name = "search[value]")] string searchValue = "")
         {
-            if (pageSize > 100)
-                pageSize = 100;
-            var purchaseOrders = await _purchaseOrderService.GetPurchaseOrdersAsync(pageNumber, pageSize);
-            return Ok(purchaseOrders);
-        }
+            int pageSize = length > 0 ? length : 10;
+            int pageNumber = (start / pageSize) + 1;
 
+            var (data, totalRecords, filteredRecords) = await _purchaseOrderService.GetPurchaseOrdersAsync(
+                pageNumber, pageSize, searchValue);
+
+            var response = new DataTableResponse<PODto>
+            {
+                Draw = draw,
+                RecordsTotal = totalRecords,
+                RecordsFiltered = filteredRecords,
+                Data = data.ToList()
+            };
+
+            return Ok(response);
+
+        }
+ 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPurchaseOrderById(int id)
         {
@@ -57,11 +73,22 @@ namespace jvPo.Controller
             if (podeets == null) return NotFound("PO details not found.");
             return Ok(podeets);
         }
+        
+        [HttpGet("generatePo")]
+        public async Task<IActionResult> GeneratePoNumber()
+        {
+            string nextPoNumber = await _purchaseOrderService.GeneratePONumberAsync();
+            return new JsonResult (new {poNumber = nextPoNumber});
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddPurchaseOrderAsync(PODto dto)
         {
             if (dto == null)
                 return BadRequest("PO is empty.");
+
+            if(!ModelState.IsValid)
+                return BadRequest();
 
             var result = await _purchaseOrderService.AddPurchaseOrderAsync(dto);
             if (!result.Success)

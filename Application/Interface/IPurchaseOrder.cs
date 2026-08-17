@@ -11,8 +11,10 @@ namespace jvPo.Application.Interface
 {
     public interface IPurchaseOrder
     {
-        Task<IEnumerable<PODto>> GetPurchaseOrdersAsync(int pageNumber, int pageSize);
+        // Task<IEnumerable<PODto>> GetPurchaseOrdersAsync(int pageNumber, int pageSize);
 
+        Task<(IEnumerable<PODto> Data, int TotalRecords, int FilteredRecords)> GetPurchaseOrdersAsync
+        (int pageNumber, int pageSize, string searchValue);
         Task<object?> GetPOByIdAsync(int id);
         Task<string> GeneratePONumberAsync();
         Task<(bool Success, string Message, string poNumber)> AddPurchaseOrderAsync(PODto dto);
