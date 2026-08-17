@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\John\\Desktop\\Jovic\\jvPo\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B0D84A70-030A-28F5-786B-BC3F894430E6}|jvPo.csproj|c:\\users\\john\\desktop\\jovic\\jvpo\\report\\viewpodetails.cs||{95027D70-C6B4-4736-8A48-AD3582187321}|Form",
+      "RelativeMoniker": "D:0:0:{B0D84A70-030A-28F5-786B-BC3F894430E6}|jvPo.csproj|solutionrelative:report\\viewpodetails.cs||{95027D70-C6B4-4736-8A48-AD3582187321}|Form"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B0D84A70-030A-28F5-786B-BC3F894430E6}|jvPo.csproj|c:\\users\\john\\desktop\\jovic\\jvpo\\application\\interface\\ipurchaseorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B0D84A70-030A-28F5-786B-BC3F894430E6}|jvPo.csproj|solutionrelative:application\\interface\\ipurchaseorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -21,10 +25,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{B0D84A70-030A-28F5-786B-BC3F894430E6}|jvPo.csproj|c:\\users\\john\\desktop\\jovic\\jvpo\\application\\services\\loginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B0D84A70-030A-28F5-786B-BC3F894430E6}|jvPo.csproj|solutionrelative:application\\services\\loginservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B0D84A70-030A-28F5-786B-BC3F894430E6}|jvPo.csproj|c:\\users\\john\\desktop\\jovic\\jvpo\\report\\viewpodetails.cs||{95027D70-C6B4-4736-8A48-AD3582187321}|Form",
-      "RelativeMoniker": "D:0:0:{B0D84A70-030A-28F5-786B-BC3F894430E6}|jvPo.csproj|solutionrelative:report\\viewpodetails.cs||{95027D70-C6B4-4736-8A48-AD3582187321}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B0D84A70-030A-28F5-786B-BC3F894430E6}|jvPo.csproj|c:\\users\\john\\desktop\\jovic\\jvpo\\application\\services\\datamigrationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -46,7 +46,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -54,7 +54,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "IPurchaseOrder.cs",
               "DocumentMoniker": "C:\\Users\\John\\Desktop\\Jovic\\jvPo\\Application\\Interface\\IPurchaseOrder.cs",
               "RelativeDocumentMoniker": "Application\\Interface\\IPurchaseOrder.cs",
@@ -62,12 +62,11 @@
               "RelativeToolTip": "Application\\Interface\\IPurchaseOrder.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-22T05:08:08.378Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-22T05:08:08.378Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "POController.cs",
               "DocumentMoniker": "C:\\Users\\John\\Desktop\\Jovic\\jvPo\\Controller\\POController.cs",
               "RelativeDocumentMoniker": "Controller\\POController.cs",
@@ -91,7 +90,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "PurchaseOrderService.cs",
               "DocumentMoniker": "C:\\Users\\John\\Desktop\\Jovic\\jvPo\\Application\\Services\\PurchaseOrderService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\PurchaseOrderService.cs",
@@ -103,7 +102,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
               "Title": "ViewPODetails.cs [Design]",
               "DocumentMoniker": "C:\\Users\\John\\Desktop\\Jovic\\jvPo\\Report\\ViewPODetails.cs",
               "RelativeDocumentMoniker": "Report\\ViewPODetails.cs",
@@ -115,7 +114,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "LoginService.cs",
               "DocumentMoniker": "C:\\Users\\John\\Desktop\\Jovic\\jvPo\\Application\\Services\\LoginService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\LoginService.cs",
@@ -127,7 +126,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "LoginController.cs",
               "DocumentMoniker": "C:\\Users\\John\\Desktop\\Jovic\\jvPo\\Controller\\LoginController.cs",
               "RelativeDocumentMoniker": "Controller\\LoginController.cs",

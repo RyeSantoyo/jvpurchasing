@@ -68,8 +68,6 @@ namespace jvPo.Application.Services
             {
                 return (false, $"An error occurred while adding the supplier: {ex.Message}");
             }
-
-
         }
 
         public async Task<(bool Success, string Message)> DeleteSupplierAsync(int id)

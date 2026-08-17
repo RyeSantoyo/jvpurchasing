@@ -1,3 +1,4 @@
+using DevExpress.Data.Filtering.Helpers;
 using DevExpress.XtraReports;
 using jvPo.Application.Interface;
 using jvPo.Models;
@@ -113,20 +114,28 @@ namespace jvPo.Application.Services
 
         public async Task<string> GeneratePONumberAsync()
         {
-            var lastPo = await _context.POs
-            .OrderByDescending(po => po.Id)
-            .FirstOrDefaultAsync();
-            int lastNumber = 0;
-            if (lastPo != null)
-            {
-                var parts = lastPo.PONumber.ToString().Split('-');
+            var poNumbers = await _context.POs
+                                        .OrderByDescending(p => p.PODate)
+                                        .ThenByDescending(p => p.Id)
+                                        .Take(50)
+                                        .Select(p => p.PONumber)
+                                        .ToListAsync();
 
-                if (parts.Length == 2 && int.TryParse(parts[1], out int number))
-                {
-                    lastNumber = number;
+            int lastSequence = 0;
+
+            foreach(var rawPo in poNumbers)
+            {
+            if(int.TryParse(rawPo?.Trim(), out int parsedNum)){
+                    if(parsedNum > lastSequence)
+                    {
+                        lastSequence = parsedNum;
+                        break;
+                    }
                 }
             }
-            return $"PO-{lastNumber + 1:D5}";
+            int nextNumber = lastSequence > 0 ? lastSequence + 1 :1001;
+
+            return nextNumber.ToString();
         }
 
         public async Task<object?> GetPOByIdAsync(int id)
@@ -169,9 +178,9 @@ namespace jvPo.Application.Services
 
         public async Task<IEnumerable<PODetailsDTO>> GetPODetailsAsync(int pageNumber, int pageSize)
         {
-            var pod = await _context.PODetails
+            var pod = _context.PODetails
                 .AsNoTracking()
-                .GroupBy(d => new { d.POId, d.PONumber, d.CompanyId, d.CompanyCode, d.Description })
+                .GroupBy(d => new { d.POId, d.PONumber, d.CompanyId, d.CompanyCode, d.Description, d.Unit })
                 .Select(g => new PODetailsDTO
                 {
                     POId = g.Key.POId,
@@ -180,68 +189,122 @@ namespace jvPo.Application.Services
                     CompanyCode = g.Key.CompanyCode,
                     Total = g.Sum(x => x.Total),
                     Quantity = g.Sum(x => x.Quantity),
-                    Unit = string.IsNullOrEmpty(g.FirstOrDefault()!.Unit) ? "N/A" : g.FirstOrDefault()!.Unit.Trim(),
-                    Description = string.IsNullOrEmpty(g.Key.Description) ? "N/A" : g.Key.Description.Trim(),
+                    Unit = g.Key.Unit ?? "N/A",
+                    Description = g.Key.Description,
                     Price = g.Average(x => x.Price)
-                })
-                .OrderByDescending(po => po.POId)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+                });
 
-            return pod;
+            var result = await pod.OrderByDescending(d => d.POId)
+            .Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            foreach (var item in result)
+            {
+                item.Unit = item.Unit.Trim();
+                item.Description = item.Description.Trim();
+            }
+
+            return result;
         }
 
         public async Task<IEnumerable<PODetailsDTO>> GetPODetailsAsyncId(int id)
         {
             throw new NotImplementedException();
         }
+#region GetPO
+        // public async Task<IEnumerable<PODto>> GetPurchaseOrdersAsync(int pageNumber, int pageSize)
+        // {
 
-        public async Task<IEnumerable<PODto>> GetPurchaseOrdersAsync(int pageNumber, int pageSize)
-        {
+        //     return await _context.POs
+        //     .AsNoTracking()
+        //     .OrderByDescending(po => po.PODate)
+        //     .ThenByDescending(po => po.Id)
+        //     .Skip((pageNumber - 1) * pageSize)
+        //     .Take(pageSize)
+        //     .Select(po => new PODto
+        //     {
+        //         POID = po.Id,
+        //         CompanyId = po.CompanyId,
+        //         CompanyCode = po.CompanyCode,
+        //         PONumber = po.PONumber,
+        //         PODate = po.PODate,
+        //         SupplierId = po.SupplierId,
+        //         DeliveryId = po.DeliveryAddressID,
+        //         DeliveryAddress = string.IsNullOrEmpty(po.Address.Address) ? "N/A" : po.Address.Address.Trim(),
+        //         TermsId = po.TermsId,
+        //         AgreedTerms = string.IsNullOrEmpty(po.Terms.Term) ? "N/A" : po.Terms.Term.Trim(),
+        //         RequestedBy = po.RequestedBy,
+        //         OrderBy = po.OrderBy,
+        //         RONumber = po.RONumber,
+        //         RODate = po.RODate,
+        //         TotalAmount = po.TotalAmount,
+        //         Remarks = po.Remarks,
 
-            return await _context.POs
+        //     })
+        //     .ToListAsync();
 
-            .AsNoTracking()
-            .OrderByDescending(po => po.Id)
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .Select(po => new PODto
-            {
-                POID = po.Id,
-                CompanyId = po.CompanyId,
-                CompanyCode = po.CompanyCode,
-                PONumber = po.PONumber,
-                PODate = po.PODate,
-                SupplierId = po.SupplierId,
-                DeliveryId = po.DeliveryAddressID,
-                DeliveryAddress = string.IsNullOrEmpty(po.Address.Address) ? "N/A" : po.Address.Address.Trim(),
-                TermsId = po.TermsId,
-                AgreedTerms = string.IsNullOrEmpty(po.Terms.Term) ? "N/A" : po.Terms.Term.Trim(),
-                RequestedBy = po.RequestedBy,
-                OrderBy = po.OrderBy,
-                RONumber = po.RONumber,
-                RODate = po.RODate,
-                TotalAmount = po.TotalAmount,
-                Remarks = po.Remarks,
-                // PODetails = po.PODetails.Select(d => new PODetailsDTO
-                // {
-                //     POId = d.POId,
-                //     CompanyId = d.CompanyId,
-                //     CompanyCode = d.CompanyCode,
-                //     Quantity = d.Quantity,
-                //     Unit = d.Unit,
-                //     Description = d.Description,
-                //     Price = d.Price,
-                //     Total = d.Total,
-                //     PONumber = d.PONumber
-                // }).ToList()
-            })
-            .ToListAsync();
+        // }
 
-        }
+        // public async Task<(IEnumerable<PODto> Data, int TotalRecord, int FilteredRecord)> GetPurchaseOrdersAsync(int skip, int take, string? searchValue, string? sortColumn, string? sortDirection)
+        // {
+        //     var query = _context.POs.AsNoTracking();
 
-        public async Task<(IEnumerable<PODto> Data, int TotalRecord, int FilteredRecord)> GetPurchaseOrdersAsync(int skip, int take, string? searchValue, string? sortColumn, string? sortDirection)
+        //     int totalRecords = await query.CountAsync();
+
+        //     if (!string.IsNullOrEmpty(searchValue))
+        //     {
+        //         searchValue = searchValue.ToLower();
+
+        //         query = query.Where(po =>
+        //         po.PONumber.ToLower().Contains(searchValue) ||
+        //         po.RequestedBy.ToLower().Contains(searchValue) ||
+        //         (po.Address != null && po.Address.Address.ToLower().Contains(searchValue))
+        //         );
+
+        //     }
+
+        //     int recordsFiltered = await query.CountAsync();
+
+        //     if (!string.IsNullOrWhiteSpace(sortColumn) && !string.IsNullOrWhiteSpace(sortDirection))
+        //     {
+        //         bool isDescending = sortDirection.ToLower() == "desc";
+        //         query = sortColumn.ToLower() switch
+        //         {
+        //             "ponumber" => isDescending ? query.OrderByDescending(po => po.PONumber) : query.OrderBy(po => po.PONumber),
+        //             "podate" => isDescending ? query.OrderByDescending(po => po.PODate) : query.OrderBy(po => po.PODate),
+        //             "totalamount" => isDescending ? query.OrderByDescending(po => po.TotalAmount) : query.OrderBy(po => po.TotalAmount),
+        //             _ => isDescending ? query.OrderByDescending(po => po.Id) : query.OrderBy(po => po.Id)
+        //         };
+        //     }
+        //     else
+        //     {
+        //         query = query.OrderByDescending(po => po.Id);
+        //     }
+
+        //     var data = await query.Skip(skip).Take(take)
+        //         .Select(po => new PODto
+        //         {
+        //             POID = po.Id,
+        //             CompanyId = po.CompanyId,
+        //             CompanyCode = po.CompanyCode,
+        //             PONumber = po.PONumber,
+        //             PODate = po.PODate,
+        //             SupplierId = po.SupplierId,
+        //             DeliveryId = po.DeliveryAddressID,
+        //             DeliveryAddress = string.IsNullOrEmpty(po.Address.Address) ? "N/A" : po.Address.Address.Trim(),
+        //             TermsId = po.TermsId,
+        //             AgreedTerms = po.AgreedTerms,
+        //             RequestedBy = po.RequestedBy,
+        //             OrderBy = po.OrderBy,
+        //             RONumber = po.RONumber,
+        //             RODate = po.RODate,
+        //             TotalAmount = po.TotalAmount,
+        //             Remarks = po.Remarks
+        //         }).ToListAsync();
+        //     return (data, totalRecords, recordsFiltered);
+        // }
+#endregion
+
+        public async Task<(IEnumerable<PODto> Data, int TotalRecords, int FilteredRecords)> GetPurchaseOrdersAsync(int pageNumber, int pageSize, string searchValue)
         {
             var query = _context.POs.AsNoTracking();
 
@@ -249,35 +312,22 @@ namespace jvPo.Application.Services
 
             if (!string.IsNullOrEmpty(searchValue))
             {
-                searchValue = searchValue.ToLower();
-
+                string search = searchValue.Trim().ToLower();
                 query = query.Where(po =>
-                po.PONumber.ToLower().Contains(searchValue) ||
-                po.RequestedBy.ToLower().Contains(searchValue) ||
-                (po.Address != null && po.Address.Address.ToLower().Contains(searchValue))
+                    (po.PONumber != null && po.PONumber.ToLower().Contains(search)) ||
+                    (po.RequestedBy != null && po.RequestedBy.ToLower().Contains(search)) ||
+                    (po.Address != null && po.Address.Address != null && po.Address.Address.ToLower().Contains(search)) ||
+                    (po.Supplier != null && po.Supplier.SupplierName != null && po.Supplier.SupplierName.ToLower().Contains(search))
                 );
-
             }
 
-            int recordsFiltered = await query.CountAsync();
+            int filteredRecords = await query.CountAsync();
 
-            if (!string.IsNullOrWhiteSpace(sortColumn) && !string.IsNullOrWhiteSpace(sortDirection))
-            {
-                bool isDescending = sortDirection.ToLower() == "desc";
-                query = sortColumn.ToLower() switch
-                {
-                    "ponumber" => isDescending ? query.OrderByDescending(po => po.PONumber) : query.OrderBy(po => po.PONumber),
-                    "podate" => isDescending ? query.OrderByDescending(po => po.PODate) : query.OrderBy(po => po.PODate),
-                    "totalamount" => isDescending ? query.OrderByDescending(po => po.TotalAmount) : query.OrderBy(po => po.TotalAmount),
-                    _ => isDescending ? query.OrderByDescending(po => po.Id) : query.OrderBy(po => po.Id)
-                };
-            }
-            else
-            {
-                query = query.OrderByDescending(po => po.Id);
-            }
-
-            var data = await query.Skip(skip).Take(take)
+            var data = await query
+                .OrderByDescending(po => po.PODate)
+                .ThenByDescending(po => po.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(po => new PODto
                 {
                     POID = po.Id,
@@ -289,16 +339,18 @@ namespace jvPo.Application.Services
                     DeliveryId = po.DeliveryAddressID,
                     DeliveryAddress = string.IsNullOrEmpty(po.Address.Address) ? "N/A" : po.Address.Address.Trim(),
                     TermsId = po.TermsId,
-                    AgreedTerms = po.AgreedTerms,
+                    AgreedTerms = string.IsNullOrEmpty(po.Terms.Term) ? "N/A" : po.Terms.Term.Trim(),
                     RequestedBy = po.RequestedBy,
                     OrderBy = po.OrderBy,
                     RONumber = po.RONumber,
                     RODate = po.RODate,
                     TotalAmount = po.TotalAmount,
-                    Remarks = po.Remarks
+                    Remarks = po.Remarks,
                 }).ToListAsync();
-                    return (data, totalRecords, recordsFiltered);
+            return (data, totalRecords, filteredRecords);
         }
+
+
 
         public ViewPODetails PreviewPo(string poNumber)
         {
