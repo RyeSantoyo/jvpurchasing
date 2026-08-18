@@ -21,7 +21,7 @@ namespace jvPo.Controller
             _companyService = companyService;
         }
 
-        [HttpGet]
+        [HttpGet("companies")]
         public async Task<ActionResult<IEnumerable<object>>> GetCompanyAsync()
         {
             var company = await _companyService.GetCompanyAsync();
