@@ -52,7 +52,9 @@
 
             <div class="modal-body">
                 <form id="createPoForm">
-                    <div class="mb-3">
+                    <div class="row g-3">
+
+                    <div class="col-md-6">
                         <label class="form-label" >PO Number</label>
                         <div class="input-group">
                             <input type="text" id="poNumber" class="form-bg-light form-control" readonly />
@@ -67,21 +69,57 @@
                             </label>
                         </div>
                     </div>
-                    <div class="mb-3">
+                      <div class="col-md-6">
+                        <label class="form-label" for="roNumber">RO Number</label>
+                        <div class="input-group">
+                        <input type="text" id="roNumber" class="form-bg-light form-control" readonly />
+                        <button class="btn btn-outline-secondary" type="button" id="btnRefreshRo">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                        </div>
+                        <div class="form-check mt-1">
+                        <input class="form-check-input" type="checkbox" id="chkManualRo">
+                        <label class="form-check-label text-muted small" for="chkManualRo">
+                            Override with manual RO number
+                        </label>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="row g-3 mt-2">
+
+                    <div class="col-md-6">
+                        <label class="form-label"> Company</label>
+                        <select class="form-control" id="companyId">
+                            <option value="">Select Company</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
                         <label class="form-label"> Supplier</label>
                         <select class="form-control" id="supplierId">
                             <option value="">Select Supplier</option>
                         </select>
                     </div>
+
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label"> Terms</label>
-                        <select class="form-control" id="supplierId">
+                        <select class="form-control" id="termsId">
                             <option value="">Select Applicable Terms</option>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label"> Order Date</label>
+                    <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label"> PO Date</label>
                         <input type="date" class="form-control" id="orderDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+
+                        <div class="col-md-6">
+                        <label class="form-label"> RO Date</label>
+                        <input type="date" class="form-control" id="roDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
                     </div>
 
                     <h6> Order Details </h6>
@@ -312,7 +350,9 @@
          
         function addNewPo() {
                 generatePoNumber();
+                getCompanies();
                 getSuppliers();
+                getTerms();
                 var modal = new bootstrap.Modal(document.getElementById('myModal'));
                 $('#chkManualPo').prop('checked', false);
                 modal.show();
@@ -359,6 +399,35 @@
                 alert("Failed to load suppliers. Check API connection.");
             });
         }
+
+        function getCompanies(){
+            $.get('/api/company/companies', function(data){
+                if(data && Array.isArray(data)){
+                    const companySelect = $('#companyId');
+                    companySelect.empty().append('<option value="">Select Company</option>');
+                    data.forEach(company => {
+                        companySelect.append(`<option value="${company.id}">${company.name}</option>`);
+                    });
+                }
+            }).fail(function(){
+                alert("Failed to load companies. Check API connection.");
+            });
+        }
+
+        function getTerms(){
+            $.get('/api/terms/terms', function(data){
+
+                if(data && Array.isArray(data)){
+                    const termsSelect = $('#termsId');
+                    termsSelect.empty().append('<option value="">Select Terms</option>');
+                    data.forEach(term => {
+                        termsSelect.append(`<option value="${term.id}">${term.term}</option>`);
+                    });
+                }
+            }).fail(function(){
+                alert("Failed to load terms. Check API connection.");
+            });
+        }
         @* function generatePoNumber(){
             if(!localStorage.getItem("lastPoNumber")){
                 localStorage.setItem("lastPoNumber", 5456);
@@ -372,14 +441,80 @@
             function submitPO(){
                 
                 let poNumber = $("#poNumber").val();
+                let companyId = $("#companyId").val();
                 let supplierId = $("#supplierId").val();
+                let termsId = $("#termsId").val();
                 let orderDate = $("#orderDate").val();
                 let orderDetails = [];
+                let totalAmount = 0;
 
-                if(!supplierId){
-                    alert("Supplier cannot be empty.");
+                if(!supplierId || !termsId || !orderDate || !companyId){
+                    alert("Please fill in all required fields.");
                     return;
                 }
+
+                $("#orderTable tbody tr").each(function(){
+                    let product = $(this).find(".product-input").val();
+                    let unit = $(this).find(".unitInput").val();
+                    let quantity = parseFloat($(this).find(".quantityInput").val()) || 0;
+                    let price = parseFloat($(this).find(".priceInput").val()) || 0;
+
+                    if(product && unit && quantity > 0 && price > 0){
+                        let lineTotal = quantity * price;
+                        totalAmount += lineTotal;
+
+                        //Inside PODetails
+                        orderDetails.push({
+                            product: product,
+                            unit: unit,
+                            quantity: quantity,
+                            price: price
+                        });
+                    }
+                });
+
+                if(orderDetails.length === 0){
+                    alert("Please add at least one valid order detail.");
+                    return;
+                }
+
+                    let payload = {
+                        companyId: parseInt(companyId),
+                        poNumber: poNumber,
+                        poDate: orderDate,
+                        supplierId: parseInt(supplierId),
+                        termsId: parseInt(termsId),
+                        
+                        // Hardcode valid existing DB IDs for missing UI inputs temporarily
+                        deliveryAddress: 1, // Ensure ID 1 exists in dbo.DeliveryAddress
+                        userId: 1,          // Ensure ID 1 exists in your Users table
+                        requestedBy: "Dev Test",
+                        orderBy: "Dev Test",
+                        roNumber: 0,
+                        remarks: "Testing PO submission",
+                        
+                        poDetails: orderDetails
+                    };
+
+                console.log("Submitting payload:", JSON.stringify(payload));
+
+                $.ajax({
+                    url: '/api/po/createpo',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(payload),
+                    success: function(result){
+                        alert("Purchase Order created successfully!");
+                        let modalEl = document.getElementById('myModal');
+                        let modalInstance = bootstrap.Modal.getInstance(modalEl);
+                        modalInstance.hide();
+                        refreshTable();
+                    },
+                    error: function(xhr, status, error){
+                        console.error("Error creating PO:", xhr.status, error);
+                        alert("Failed to create Purchase Order. Check API connection.");
+                    }
+                }); 
             }
 
         // 1. VIEW ACTION
@@ -388,7 +523,7 @@
                     let supplierId = $("#supplierId").val();
                     
                 if(!supplierId){
-                        alert("Error");
+                        alert("Supplier is Empty.");
                         return;
                 }
                 // Corrected HTML structure with text input as requested
@@ -407,6 +542,9 @@
                                 </td>
                                 <td>
                                         <span class="totalInput">0.00</span>
+                                </td>
+                                <td>
+                                    <input type="button" class="btn btn-danger btn-sm removeOrderRow" value="X" />
                                 </td>
                         </tr>`;
 
@@ -427,6 +565,10 @@
             }
         $(document).on('input', '.quantityInput, .priceInput', function(){
                     updateTotal();
+        });
+                $(document).on("click", ".removeOrderRow", function(){
+            $(this).closest("tr").remove();
+            updateTotal();
         });
         function viewOrder(id, poNum, address, terms, amount) {
             $("#viewPoId").text(id);

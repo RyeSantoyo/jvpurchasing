@@ -37,10 +37,12 @@ namespace jvPo.Application.Services
             if (supplier == null)
                 return (false, "Supplier Does not exist.", "");
             Console.WriteLine($"Received JSON:{JsonSerializer.Serialize(dto)} ");
+
             if (company == null)
-                return (false, "It does not exist.", "");
+                return (false, "Company does not exist.", "");
+                
             if (terms == null)
-                return (false, "It does not exist.", "");
+                return (false, "Terms does not exist.", "");
 
             if (dto.PODetails == null || dto.PODetails.Count == 0)
                 return (false, "No data available.", "");

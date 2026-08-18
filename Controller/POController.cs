@@ -81,7 +81,7 @@ namespace jvPo.Controller
             return new JsonResult (new {poNumber = nextPoNumber});
         }
 
-        [HttpPost]
+        [HttpPost("createpo")]
         public async Task<IActionResult> AddPurchaseOrderAsync(PODto dto)
         {
             if (dto == null)
