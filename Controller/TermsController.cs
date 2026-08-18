@@ -19,7 +19,7 @@ namespace jvPo.Controller
             _termsService = termsService;
         }
 
-        [HttpGet]
+        [HttpGet("terms")]
         public async Task<IActionResult> GetTermsAsync()
         {
             var terms = await _termsService.GetTermsAsync();
