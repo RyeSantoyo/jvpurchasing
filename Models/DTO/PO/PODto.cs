@@ -13,7 +13,7 @@ namespace jvPo.Models.DTO
         public string PONumber { get; set; } = string.Empty;
         public DateTime PODate { get; set; } = DateTime.UtcNow;
         public int SupplierId { get; set; }
-        public int DeliveryId { get; set; }
+        public int DeliveryAddressId { get; set; }
         public string DeliveryAddress { get; set; } =string.Empty;
         public int TermsId { get; set; }
         public string AgreedTerms { get; set; } = string.Empty;

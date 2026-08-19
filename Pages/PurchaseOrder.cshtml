@@ -113,7 +113,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label"> Delivery Address</label>
-                        <select class="form-control" id="deliveryAddress">
+                        <select class="form-control" id="deliveryAddressId">
                             <option value="">Select Delivery Address</option>
                         </select>
                     </div>
@@ -434,7 +434,7 @@
         function getDeliveryAddress(){
             $.get('/api/deliveryaddress/deliveryaddress', function(data){
                 if(data && Array.isArray(data)){
-                    const addressSelect = $('#deliveryAddress');
+                    const addressSelect = $('#deliveryAddressId');
                     addressSelect.empty().append('<option value="">Select Delivery Address</option>');
                     data.forEach(address => {
                         addressSelect.append(`<option value="${address.id}">${address.address}</option>`);
@@ -475,13 +475,13 @@
                 let roNumber = $("#roNumber").val();
                 let companyId = $("#companyId").val();
                 let supplierId = $("#supplierId").val();
-                let deliveryAddress = $("#deliveryAddress").val();
+                let deliveryAddressId = $("#deliveryAddressId").val();
                 let termsId = $("#termsId").val();
                 let orderDate = $("#orderDate").val();
                 let orderDetails = [];
                 let totalAmount = 0;
 
-                if(!supplierId || !termsId || !orderDate || !companyId){
+                if(!supplierId || !termsId || !orderDate || !companyId || !deliveryAddressId){
                     alert("Please fill in all required fields.");
                     return;
                 }
@@ -521,7 +521,8 @@
                         supplierName: $("#supplierId option:selected").text(),
                         supplierAddress: $("#supplierId option:selected").data("supplierAddress") || "N/A",
                         termsId: parseInt(termsId),
-                        deliveryAddress: parseInt(deliveryAddress),
+                        deliveryAddressId: parseInt(deliveryAddressId),
+                        deliveryAddress: $("#deliveryAddressId option:selected").text(),
                         // Hardcode valid existing DB IDs for missing UI inputs temporarily
                         //userId: 1,          // Ensure ID 1 exists in your Users table
                         requestedBy: "Dev Test",

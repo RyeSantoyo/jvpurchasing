@@ -63,7 +63,7 @@ namespace jvPo.Application.Services
                     SupplierName = supplier?.SupplierName ?? string.Empty,
                     SupplierAddress = supplier?.SupplierAddress ?? string.Empty,
 
-                    DeliveryAddressID = dto.DeliveryId,
+                    DeliveryAddressID = dto.DeliveryAddressId,
                     DeliveryAddress = dto.DeliveryAddress,
                     TermsId = dto.TermsId,
                     AgreedTerms = terms?.Term ?? string.Empty,
@@ -338,7 +338,7 @@ namespace jvPo.Application.Services
                     PONumber = po.PONumber,
                     PODate = po.PODate,
                     SupplierId = po.SupplierId,
-                    DeliveryId = po.DeliveryAddressID,
+                    DeliveryAddressId = po.DeliveryAddressID,
                     DeliveryAddress = string.IsNullOrEmpty(po.Address.Address) ? "N/A" : po.Address.Address.Trim(),
                     TermsId = po.TermsId,
                     AgreedTerms = string.IsNullOrEmpty(po.Terms.Term) ? "N/A" : po.Terms.Term.Trim(),

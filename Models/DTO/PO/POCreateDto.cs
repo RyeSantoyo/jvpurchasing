@@ -11,7 +11,8 @@ namespace jvPo.Models.DTO.PO
         public string PONumber { get; set; } = string.Empty;
         public DateTime PODate { get; set; } = DateTime.UtcNow;
         public int SupplierId { get; set; }
-        public int DeliveryAddress { get; set; }
+        public int DeliveryAddressId { get; set; }
+        public string DeliveryAddress {get;set;} = string.Empty;
         public int TermsId { get; set; }
         public int UserId { get; set; }
         public string RequestedBy { get; set; } = string.Empty; //Can be anyone
