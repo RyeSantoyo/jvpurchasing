@@ -21,7 +21,7 @@ namespace jvPo.Controller
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("deliveryaddress")]
         public async Task<IActionResult> GetDeliveryAddressAsync()
         {
             var deliveryAddresses = await _deliveryAddressService.GetDeliveryAddressAsync();

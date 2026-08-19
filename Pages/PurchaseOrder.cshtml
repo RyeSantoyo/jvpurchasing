@@ -23,6 +23,8 @@
                     <tr>
                         <th>Order ID</th>
                         <th>PO Number</th>
+                        <th>RO Number</th>
+                        <th>Company Code</th>
                         <th>Delivery Address</th>
                         <th>Agreed Terms</th>
                         <th>Total Amount</th>
@@ -72,15 +74,13 @@
                       <div class="col-md-6">
                         <label class="form-label" for="roNumber">RO Number</label>
                         <div class="input-group">
-                        <input type="text" id="roNumber" class="form-bg-light form-control" readonly />
+                        <input type="text" id="roNumber" class="form-bg-light form-control" />
                         <button class="btn btn-outline-secondary" type="button" id="btnRefreshRo">
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
                         </div>
                         <div class="form-check mt-1">
-                        <input class="form-check-input" type="checkbox" id="chkManualRo">
                         <label class="form-check-label text-muted small" for="chkManualRo">
-                            Override with manual RO number
                         </label>
                         </div>
                     </div>
@@ -104,10 +104,17 @@
 
                     </div>
 
-                    <div class="mb-3">
+                    <div class="row g-3 mt-2">
+                    <div class="col-md-6">
                         <label class="form-label"> Terms</label>
                         <select class="form-control" id="termsId">
                             <option value="">Select Applicable Terms</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"> Delivery Address</label>
+                        <select class="form-control" id="deliveryAddress">
+                            <option value="">Select Delivery Address</option>
                         </select>
                     </div>
                     <div class="row g-3">
@@ -146,7 +153,7 @@
         </div>
     </div>
 </div>
-
+<!-- Modal for Viewing Purchase Order Details -->
 <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -184,7 +191,7 @@
         </div>
     </div>
 </div>
-
+<!-- Modal for Editing a Purchase Order -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -225,6 +232,7 @@
     </div>
 </div>
 
+<!-- Modal for Deleting a Purchase Order -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -279,6 +287,14 @@
                     },
                     { 
                         "data": "poNumber", 
+                    },
+                    {
+                        "data": "roNumber",
+                        "className": "text-center"
+                    },
+                    {
+                        "data": "companyCode",
+                        "className": "text-center"
                     },
                     { 
                         "data": "deliveryAddress",
@@ -352,6 +368,7 @@
                 generatePoNumber();
                 getCompanies();
                 getSuppliers();
+                getDeliveryAddress();
                 getTerms();
                 var modal = new bootstrap.Modal(document.getElementById('myModal'));
                 $('#chkManualPo').prop('checked', false);
@@ -414,6 +431,20 @@
             });
         }
 
+        function getDeliveryAddress(){
+            $.get('/api/deliveryaddress/deliveryaddress', function(data){
+                if(data && Array.isArray(data)){
+                    const addressSelect = $('#deliveryAddress');
+                    addressSelect.empty().append('<option value="">Select Delivery Address</option>');
+                    data.forEach(address => {
+                        addressSelect.append(`<option value="${address.id}">${address.address}</option>`);
+                    });
+                }
+            }).fail(function(){
+                alert("Failed to load delivery addresses. Check API connection.");
+            })
+        }
+
         function getTerms(){
             $.get('/api/terms/terms', function(data){
 
@@ -441,8 +472,10 @@
             function submitPO(){
                 
                 let poNumber = $("#poNumber").val();
+                let roNumber = $("#roNumber").val();
                 let companyId = $("#companyId").val();
                 let supplierId = $("#supplierId").val();
+                let deliveryAddress = $("#deliveryAddress").val();
                 let termsId = $("#termsId").val();
                 let orderDate = $("#orderDate").val();
                 let orderDetails = [];
@@ -480,17 +513,19 @@
 
                     let payload = {
                         companyId: parseInt(companyId),
+                        companyCode: $("#companyId option:selected").text(),
                         poNumber: poNumber,
                         poDate: orderDate,
+                        roNumber: roNumber,                    
                         supplierId: parseInt(supplierId),
+                        supplierName: $("#supplierId option:selected").text(),
+                        supplierAddress: $("#supplierId option:selected").data("supplierAddress") || "N/A",
                         termsId: parseInt(termsId),
-                        
+                        deliveryAddress: parseInt(deliveryAddress),
                         // Hardcode valid existing DB IDs for missing UI inputs temporarily
-                        deliveryAddress: 1, // Ensure ID 1 exists in dbo.DeliveryAddress
-                        userId: 1,          // Ensure ID 1 exists in your Users table
+                        //userId: 1,          // Ensure ID 1 exists in your Users table
                         requestedBy: "Dev Test",
                         orderBy: "Dev Test",
-                        roNumber: 0,
                         remarks: "Testing PO submission",
                         
                         poDetails: orderDetails
