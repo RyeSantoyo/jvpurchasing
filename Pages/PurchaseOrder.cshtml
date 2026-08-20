@@ -172,6 +172,10 @@
                         <td id="viewPoNumber"></td>
                     </tr>
                     <tr>
+                        <th>RO Number</th>
+                        <td id="viewRoNumber"></td>
+                    </tr>
+                    <tr>
                         <th>Delivery Address</th>
                         <td id="viewDeliveryAddress"></td>
                     </tr>
@@ -187,6 +191,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onClick="printOrder()">Print</button>
             </div>
         </div>
     </div>
@@ -498,10 +503,15 @@
 
                         //Inside PODetails
                         orderDetails.push({
-                            product: product,
+                            companyId: parseInt(companyId),
+                            companyCode: $("#companyId option:selected").val(),
+                            poid: $("#poNumber").val(),
+                            poNumber: poNumber,
+                            description: product,
                             unit: unit,
                             quantity: quantity,
-                            price: price
+                            price: price,
+                            total: lineTotal,
                         });
                     }
                 });
@@ -551,6 +561,10 @@
                         alert("Failed to create Purchase Order. Check API connection.");
                     }
                 }); 
+            }
+
+            function printOrder (){
+                alert("Print functionality is not yet implemented.");
             }
 
         // 1. VIEW ACTION
@@ -606,23 +620,30 @@
             $(this).closest("tr").remove();
             updateTotal();
         });
-        function viewOrder(id, poNum, address, terms, amount) {
-            $("#viewPoId").text(id);
-            $("#viewPoNumber").text(poNum);
-            $("#viewDeliveryAddress").text(address);
-            $("#viewAgreedTerms").text(terms);
             
-            // Format currency inside view modal
-            const formattedAmount = new Intl.NumberFormat('en-US', { 
-                style: 'currency', 
-                currency: 'USD' 
-            }).format(amount);
-            $("#viewTotalAmount").text(formattedAmount);
+            function viewOrder(id, poNum, address, terms, amount) {
+                const modalEl = document.getElementById('viewModal');
+                
+                if (!modalEl) return;
 
-            // Show Bootstrap modal
-            let viewModal = new bootstrap.Modal(document.getElementById('viewModal'));
-            viewModal.show();
-        }
+                // Move element to document.body so z-index stacks properly above the backdrop
+                document.body.appendChild(modalEl);
+
+                $("#viewPoId").text(id);
+                $("#viewPoNumber").text(poNum);
+                $("#viewDeliveryAddress").text(address);
+                $("#viewAgreedTerms").text(terms);
+
+                const rawAmount = parseFloat(amount) || 0;
+                const formattedAmount = new Intl.NumberFormat('en-US', { 
+                    style: 'currency', 
+                    currency: 'USD' 
+                }).format(rawAmount);
+                $("#viewTotalAmount").text(formattedAmount);
+
+                let viewModal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                viewModal.show();
+            }
 
         // 2. EDIT ACTION (Open modal with current values populated)
         function editOrder(id, poNum, address, terms, amount) {
