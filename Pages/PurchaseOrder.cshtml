@@ -56,34 +56,34 @@
                 <form id="createPoForm">
                     <div class="row g-3">
 
-                    <div class="col-md-6">
-                        <label class="form-label" >PO Number</label>
-                        <div class="input-group">
-                            <input type="text" id="poNumber" class="form-bg-light form-control" readonly />
-                            <button class="btn btn-outline-secondary" type="button" id="btnRefreshPo">
+                        <div class="col-md-6">
+                            <label class="form-label" >PO Number</label>
+                            <div class="input-group">
+                                <input type="text" id="poNumber" class="form-bg-light form-control" readonly />
+                                <button class="btn btn-outline-secondary" type="button" id="btnRefreshPo">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                            </div>
+                            <div class="form-check mt-1">
+                                <input class="form-check-input" type="checkbox" id="chkManualPo">
+                                <label class="form-check-label text-muted small" for="chkManualPo">
+                                    Override with manual PO number
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="roNumber">RO Number</label>
+                            <div class="input-group">
+                            <input type="text" id="roNumber" class="form-bg-light form-control" />
+                            <button class="btn btn-outline-secondary" type="button" id="btnRefreshRo">
                                 <i class="bi bi-arrow-clockwise"></i>
                             </button>
-                        </div>
-                        <div class="form-check mt-1">
-                            <input class="form-check-input" type="checkbox" id="chkManualPo">
-                            <label class="form-check-label text-muted small" for="chkManualPo">
-                                Override with manual PO number
+                            </div>
+                            <div class="form-check mt-1">
+                            <label class="form-check-label text-muted small" for="chkManualRo">
                             </label>
+                            </div>
                         </div>
-                    </div>
-                      <div class="col-md-6">
-                        <label class="form-label" for="roNumber">RO Number</label>
-                        <div class="input-group">
-                        <input type="text" id="roNumber" class="form-bg-light form-control" />
-                        <button class="btn btn-outline-secondary" type="button" id="btnRefreshRo">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </button>
-                        </div>
-                        <div class="form-check mt-1">
-                        <label class="form-check-label text-muted small" for="chkManualRo">
-                        </label>
-                        </div>
-                    </div>
                     </div>
 
                     <div class="row g-3 mt-2">
@@ -105,17 +105,18 @@
                     </div>
 
                     <div class="row g-3 mt-2">
-                    <div class="col-md-6">
-                        <label class="form-label"> Terms</label>
-                        <select class="form-control" id="termsId">
-                            <option value="">Select Applicable Terms</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label"> Delivery Address</label>
-                        <select class="form-control" id="deliveryAddressId">
-                            <option value="">Select Delivery Address</option>
-                        </select>
+                        <div class="col-md-6">
+                            <label class="form-label"> Terms</label>
+                            <select class="form-control" id="termsId">
+                                <option value="">Select Applicable Terms</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"> Delivery Address</label>
+                            <select class="form-control" id="deliveryAddressId">
+                                <option value="">Select Delivery Address</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="row g-3">
                     <div class="col-md-6">
@@ -206,23 +207,60 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="editPoId" />
-                    
-                    <div class="mb-3">
-                        <label for="editPoNumber" class="form-label">PO Number</label>
-                        <input type="text" class="form-label form-control" id="editPoNumber" required />
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="editDeliveryAddress" class="form-label">Delivery Address</label>
-                        <textarea class="form-control" id="editDeliveryAddress" rows="2" required></textarea>
-                    </div>
 
-                    <div class="mb-3">
-                        <label for="editAgreedTerms" class="form-label">Agreed Terms</label>
-                        <input type="text" class="form-control" id="editAgreedTerms" required />
-                    </div>
+                        <div class="row g-3">
+                        <input type="hidden" id="editPoId" />
+                        
+                        <div class="col-md-6">
+                            <label for="editPoNumber" class="form-label">PO Number</label>
+                            <input type="text" class="form-label form-control" id="editPoNumber" readonly />
+                        </div>
 
+                        <div class="col-md-6">
+                            <label for="editRoNumber" class="form-label">RO Number</label>
+                            <input type="text" class="form-label form-control" id="editRoNumber" readonly />
+                        </div>                    
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Company</label>
+                            <select class="form-control" id="editCompany">
+                                <option value="">Select Company</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Supplier</label>
+                            <select class="form-control" id="editSupplier">
+                                <option value="">Select Supplier</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-6">
+                            <label class="form-label"> Terms</label>
+                            <select class="form-control" id="editAgreedTerms">
+                                <option value="">Select Applicable Terms</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"> Delivery Address</label>
+                            <select class="form-control" id="editDeliveryAddress">
+                                <option value="">Select Delivery Address</option>
+                            </select>
+                        </div>
+                    </div>                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label"> PO Date</label>
+                            <input type="date" class="form-control" id="orderDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label"> RO Date</label>
+                            <input type="date" class="form-control" id="roDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <label for="editTotalAmount" class="form-label">Total Amount (₱)</label>
                         <input type="number" step="0.01" class="form-control" id="editTotalAmount" required />
@@ -328,17 +366,18 @@
                         "className": "text-center",
                         "render": function (data, type, row) {
                             // Escaping single quotes in text properties to prevent JS syntax breaking
-                            const poNumSafe = (row.poNumber || '').replace(/'/g, "\\'");
-                            const addressSafe = (row.deliveryAddress || '').replace(/'/g, "\\'");
-                            const termsSafe = (row.agreedTerms || '').replace(/'/g, "\\'");
+                            const poNumSafe = String(row.poNumber || '').replace(/'/g, "\\'");
+                            const roNumSafe = String(row.roNumber ?? '').replace(/'/g, "\\'");
+                            const addressSafe = String(row.deliveryAddress || '').replace(/'/g, "\\'");
+                            const termsSafe = String(row.agreedTerms || '').replace(/'/g, "\\'");
                             const amountSafe = row.totalAmount || 0;
 
                             return `
                                 <div class="btn-group" role="group">
-                                    <button class="btn btn-sm btn-info text-white" onclick="viewOrder('${data}', '${poNumSafe}', '${addressSafe}', '${termsSafe}', ${amountSafe})">
+                                    <button class="btn btn-sm btn-info text-white" onclick="viewOrder('${data}', '${poNumSafe}', '${addressSafe}', '${termsSafe}', ${amountSafe}, '${roNumSafe}')">
                                         <i class="bi bi-eye"></i> View
                                     </button>
-                                    <button class="btn btn-sm btn-warning" onclick="editOrder('${data}', '${poNumSafe}', '${addressSafe}', '${termsSafe}', ${amountSafe})">
+                                    <button class="btn btn-sm btn-warning" onclick="editOrder('${data}', '${poNumSafe}', '${addressSafe}', '${termsSafe}', ${amountSafe}, '${roNumSafe}')">
                                         <i class="bi bi-pencil-square"></i> Edit
                                     </button>
                                     <button class="btn btn-sm btn-danger" onclick="confirmDelete('${data}', '${poNumSafe}')">
@@ -631,7 +670,8 @@
 
                 $("#viewPoId").text(id);
                 $("#viewPoNumber").text(poNum);
-                $("#viewRoNumber").val(roNum);
+
+                $("#viewRoNumber").text(roNum);
                 $("#viewDeliveryAddress").text(address);
                 $("#viewAgreedTerms").text(terms);
 
@@ -647,19 +687,20 @@
             }
 
         // 2. EDIT ACTION (Open modal with current values populated)
-        function editOrder(id, poNum, address, terms, amount) {
+        function editOrder(id, poNum, address, terms, amount, roNum) {
 
             const modalEl = document.getElementById('editModal');
             if (!modalEl) return;
 
             document.body.appendChild(modalEl);
 
-            if(!id || !poNum || !address || !terms || amount === undefined) {
-                alert("Missing required data for editing. Please check the row data.");
-                return;
-            }
+            if (!id || !poNum || amount === undefined) {
+                    alert("Missing required data for editing. Please check the row data.");
+                    return;
+                }
 
             $("#editPoId").val(id);
+            $("#editRoNumber").val(roNum);
             $("#editPoNumber").val(poNum);
             $("#editDeliveryAddress").val(address);
             $("#editAgreedTerms").val(terms);
