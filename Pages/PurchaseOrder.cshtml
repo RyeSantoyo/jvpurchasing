@@ -565,7 +565,7 @@
 
             function printOrder (){
                 alert("Print functionality is not yet implemented.");
-            }
+            }            
 
         // 1. VIEW ACTION
 
@@ -621,7 +621,7 @@
             updateTotal();
         });
             
-            function viewOrder(id, poNum, address, terms, amount) {
+            function viewOrder(id, poNum, address, terms, amount, roNum) {
                 const modalEl = document.getElementById('viewModal');
                 
                 if (!modalEl) return;
@@ -631,6 +631,7 @@
 
                 $("#viewPoId").text(id);
                 $("#viewPoNumber").text(poNum);
+                $("#viewRoNumber").val(roNum);
                 $("#viewDeliveryAddress").text(address);
                 $("#viewAgreedTerms").text(terms);
 
@@ -647,14 +648,34 @@
 
         // 2. EDIT ACTION (Open modal with current values populated)
         function editOrder(id, poNum, address, terms, amount) {
+
+            const modalEl = document.getElementById('editModal');
+            if (!modalEl) return;
+
+            document.body.appendChild(modalEl);
+
+            if(!id || !poNum || !address || !terms || amount === undefined) {
+                alert("Missing required data for editing. Please check the row data.");
+                return;
+            }
+
             $("#editPoId").val(id);
             $("#editPoNumber").val(poNum);
             $("#editDeliveryAddress").val(address);
             $("#editAgreedTerms").val(terms);
             $("#editTotalAmount").val(amount);
 
+            const rawAmount = parseFloat(amount) || 0;
+
+            const formattedAmount = new Intl.NumberFormat('en-US', { 
+                style: 'currency', 
+                currency: 'USD' 
+            }).format(rawAmount);
+
             let editModal = new bootstrap.Modal(document.getElementById('editModal'));
             editModal.show();
+
+
         }
 
         // 3. EDIT FORM SUBMIT (Sends data to the API backend)
