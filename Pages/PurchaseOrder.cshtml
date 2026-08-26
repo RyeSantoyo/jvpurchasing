@@ -224,14 +224,14 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Company</label>
-                            <select class="form-control" id="editCompany">
+                            <select class="form-control" id="editCompanyId">
                                 <option value="">Select Company</option>
                             </select>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Supplier</label>
-                            <select class="form-control" id="editSupplier">
+                            <select class="form-control" id="editSupplierId">
                                 <option value="">Select Supplier</option>
                             </select>
                         </div>
@@ -239,13 +239,13 @@
                     <div class="row g-3 mt-2">
                         <div class="col-md-6">
                             <label class="form-label"> Terms</label>
-                            <select class="form-control" id="editAgreedTerms">
+                            <select class="form-control" id="editAgreedTermsId">
                                 <option value="">Select Applicable Terms</option>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label"> Delivery Address</label>
-                            <select class="form-control" id="editDeliveryAddress">
+                            <select class="form-control" id="editDeliveryAddressId">
                                 <option value="">Select Delivery Address</option>
                             </select>
                         </div>
@@ -686,38 +686,55 @@
                 viewModal.show();
             }
 
-        // 2. EDIT ACTION (Open modal with current values populated)
-        function editOrder(id, poNum, address, terms, amount, roNum) {
+                    // 2. EDIT ACTION (Open modal with current values populated)
+            function editOrder(id) {
+                const modalEl = document.getElementById('editModal');
+                if (!modalEl) return;
 
-            const modalEl = document.getElementById('editModal');
-            if (!modalEl) return;
+                document.body.appendChild(modalEl);
 
-            document.body.appendChild(modalEl);
+                // Fetch full order data including line items
+                $.ajax({
+                    url: `/api/po/purchaseorder/${id}`,
+                    type: 'GET',
+                    success: function (po) {
+                        // Populate Header Inputs
+                        $("#editPoId").val(po.id);
+                        $("#editPoNumber").val(po.poNumber);
+                        $("#editRoNumber").val(po.roNumber);
+                        $("#editCompanyId").val(po.companyId);
+                        $("#editSupplierId").val(po.supplierId);
+                        $("#editDeliveryAddressId").val(po.deliveryAddressId);
+                        $("#editAgreedTermsId").val(po.termsId);
+                        $("#editTotalAmount").val(po.totalAmount);
 
-            if (!id || !poNum || amount === undefined) {
-                    alert("Missing required data for editing. Please check the row data.");
-                    return;
-                }
+                        // Populate Line Items Table inside Edit Modal
+                        let $tbody = $("#editOrderTable tbody");
+                        $tbody.empty();
 
-            $("#editPoId").val(id);
-            $("#editRoNumber").val(roNum);
-            $("#editPoNumber").val(poNum);
-            $("#editDeliveryAddress").val(address);
-            $("#editAgreedTerms").val(terms);
-            $("#editTotalAmount").val(amount);
+                        if (po.poDetails && po.poDetails.length > 0) {
+                            po.poDetails.forEach(item => {
+                                let row = `
+                                    <tr>
+                                        <td><input type="text" class="form-control product-input" value="${item.product || ''}" /></td>
+                                        <td><input type="text" class="form-control unitInput" value="${item.unit || ''}" /></td>
+                                        <td><input type="number" class="form-control quantityInput" value="${item.quantity}" /></td>
+                                        <td><input type="number" class="form-control priceInput" value="${item.price}" /></td>
+                                        <td><button type="button" class="btn btn-danger btn-sm remove-row"><i class="bi bi-trash"></i></button></td>
+                                    </tr>`;
+                                $tbody.append(row);
+                            });
+                        }
 
-            const rawAmount = parseFloat(amount) || 0;
-
-            const formattedAmount = new Intl.NumberFormat('en-US', { 
-                style: 'currency', 
-                currency: 'USD' 
-            }).format(rawAmount);
-
-            let editModal = new bootstrap.Modal(document.getElementById('editModal'));
-            editModal.show();
-
-
-        }
+                        let editModal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                        editModal.show();
+                    },
+                    error: function (xhr) {
+                        console.error("Failed to fetch PO details:", xhr);
+                        alert("Could not load PO details for editing.");
+                    }
+                });
+            }
 
         // 3. EDIT FORM SUBMIT (Sends data to the API backend)
         function submitEdit(event) {

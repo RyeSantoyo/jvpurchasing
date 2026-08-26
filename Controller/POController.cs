@@ -48,7 +48,7 @@ namespace jvPo.Controller
 
         }
  
-        [HttpGet("{id}")]
+        [HttpGet("purchaseorder/{id}")]
         public async Task<IActionResult> GetPurchaseOrderById(int id)
         {
             var purchaseOrder = await _purchaseOrderService.GetPOByIdAsync(id);
