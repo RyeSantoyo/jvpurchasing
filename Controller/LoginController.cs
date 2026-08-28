@@ -47,7 +47,7 @@ namespace jvPo.Controller
             return Ok(user);
         }
         
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpGet("users")]
         public async Task<IActionResult> GetUsers()
         {

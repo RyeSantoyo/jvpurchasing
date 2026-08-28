@@ -22,6 +22,8 @@ namespace jvPo.Application.Interface
         Task<(bool Success, string Message)> DeletePurchaseOrderAsync(int id);
         Task<IEnumerable<PODetailsDTO>> GetPODetailsAsync(int pageNumber, int pageSize);
         Task<IEnumerable<PODetailsDTO>> GetPODetailsAsyncId(int id);
-        ViewPODetails PreviewPo(string poNumber);
+        //ViewPODetails PreviewPo(string poNumber);
+
+            Task<(bool Success, string Message, ViewPODetails Report)> PreviewPo(string poNumber);
     }
 }
