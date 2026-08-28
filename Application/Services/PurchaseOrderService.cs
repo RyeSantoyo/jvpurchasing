@@ -40,7 +40,7 @@ namespace jvPo.Application.Services
 
             if (company == null)
                 return (false, "Company does not exist.", "");
-                
+
             if (terms == null)
                 return (false, "Terms does not exist.", "");
 
@@ -125,17 +125,18 @@ namespace jvPo.Application.Services
 
             int lastSequence = 0;
 
-            foreach(var rawPo in poNumbers)
+            foreach (var rawPo in poNumbers)
             {
-            if(int.TryParse(rawPo?.Trim(), out int parsedNum)){
-                    if(parsedNum > lastSequence)
+                if (int.TryParse(rawPo?.Trim(), out int parsedNum))
+                {
+                    if (parsedNum > lastSequence)
                     {
                         lastSequence = parsedNum;
                         break;
                     }
                 }
             }
-            int nextNumber = lastSequence > 0 ? lastSequence + 1 :1001;
+            int nextNumber = lastSequence > 0 ? lastSequence + 1 : 1001;
 
             return nextNumber.ToString();
         }
@@ -212,7 +213,7 @@ namespace jvPo.Application.Services
         {
             throw new NotImplementedException();
         }
-#region GetPO
+        #region GetPO
         // public async Task<IEnumerable<PODto>> GetPurchaseOrdersAsync(int pageNumber, int pageSize)
         // {
 
@@ -304,7 +305,7 @@ namespace jvPo.Application.Services
         //         }).ToListAsync();
         //     return (data, totalRecords, recordsFiltered);
         // }
-#endregion
+        #endregion
 
         public async Task<(IEnumerable<PODto> Data, int TotalRecords, int FilteredRecords)> GetPurchaseOrdersAsync(int pageNumber, int pageSize, string searchValue)
         {
@@ -354,7 +355,18 @@ namespace jvPo.Application.Services
 
 
 
-        public ViewPODetails PreviewPo(string poNumber)
+        // public ViewPODetails PreviewPo(string poNumber)
+        // {
+        //     var report = new ViewPODetails();
+        //     report.Parameters["PONumber"].Value = poNumber;
+        //     report.Parameters["PONumber"].Visible = false;
+
+        //     report.RequestParameters = false;
+
+        //     return report;
+        // }
+
+        public async Task<(bool Success, string Message, ViewPODetails Report)> PreviewPo(string poNumber)
         {
             var report = new ViewPODetails();
             report.Parameters["PONumber"].Value = poNumber;
@@ -362,7 +374,7 @@ namespace jvPo.Application.Services
 
             report.RequestParameters = false;
 
-            return report;
+            return (true, "Success", report);
         }
 
         public async Task<(bool Success, string Message)> UpdatePurchaseOrderAsync(PODto dto)

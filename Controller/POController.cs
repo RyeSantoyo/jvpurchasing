@@ -6,6 +6,7 @@ using jvPo.Application.Interface;
 using jvPo.Models;
 using jvPo.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using DevExpress.XtraReports.UI;
 
 namespace jvPo.Controller
 {
@@ -23,7 +24,7 @@ namespace jvPo.Controller
         }
 
 
-        [HttpGet("purchaseorder")] 
+        [HttpGet("purchaseorder")]
         public async Task<IActionResult> GetPurchaseOrders(
             [FromQuery] int draw,
             [FromQuery] int start,
@@ -47,7 +48,7 @@ namespace jvPo.Controller
             return Ok(response);
 
         }
- 
+
         [HttpGet("purchaseorder/{id}")]
         public async Task<IActionResult> GetPurchaseOrderById(int id)
         {
@@ -73,12 +74,12 @@ namespace jvPo.Controller
             if (podeets == null) return NotFound("PO details not found.");
             return Ok(podeets);
         }
-        
+
         [HttpGet("generatePo")]
         public async Task<IActionResult> GeneratePoNumber()
         {
             string nextPoNumber = await _purchaseOrderService.GeneratePONumberAsync();
-            return new JsonResult (new {poNumber = nextPoNumber});
+            return new JsonResult(new { poNumber = nextPoNumber });
         }
 
         [HttpPost("createpo")]
@@ -87,7 +88,7 @@ namespace jvPo.Controller
             if (dto == null)
                 return BadRequest("PO is empty.");
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest();
 
             var result = await _purchaseOrderService.AddPurchaseOrderAsync(dto);
@@ -110,6 +111,26 @@ namespace jvPo.Controller
 
             return Ok();
 
+        }
+
+        [HttpGet("printpo/{poNumber}")]
+
+        public async Task<IActionResult> GenerateReport(string poNumber)
+        {
+            var (success, message, report) = await _purchaseOrderService.PreviewPo(poNumber);
+            if (!success)
+            {
+                return BadRequest(message);
+            }
+
+            using var ms = new MemoryStream();
+            report.ExportToPdf(ms);
+
+            byte[] bytes = ms.ToArray();
+
+            report.Dispose();
+
+            return File(bytes, "application/pdf");
         }
     }
 }
