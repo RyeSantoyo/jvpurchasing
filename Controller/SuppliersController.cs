@@ -7,16 +7,20 @@ using jvPo.Application.Interface;
 using jvPo.Models;
 using Microsoft.AspNetCore.Mvc;
 using jvPo.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace jvPo.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = "101")] // Apply the policy to the entire controller
     public class SuppliersController : ControllerBase
     {
+
         private readonly ApplicationDbContext _context;
-        
+
         private readonly ISupplier _supplierService;
+
         public SuppliersController(ApplicationDbContext context, ISupplier supplierService)
         {
             _context = context;
@@ -26,18 +30,22 @@ namespace jvPo.Controller
         [HttpGet("vendors")]
         public async Task<IActionResult> GetSuppliers()
         {
+
             var suppliers = await _supplierService.GetSuppliersAsync();
             return Ok(suppliers);
         }
+        //     var suppliers = await _supplierService.GetSuppliersAsync();
+        //     return Ok(suppliers);
+        // }
 
         [HttpPost]
         public async Task<IActionResult> AddSupplierAsync(SupplierDTO dto)
         {
-            if(dto == null)
+            if (dto == null)
                 return BadRequest("Supplier cannot be null.");
 
             var result = await _supplierService.AddSupplierAsync(dto);
-            if(!result.Success)
+            if (!result.Success)
                 return BadRequest(result.Message);
 
             return Ok(result);
@@ -45,29 +53,29 @@ namespace jvPo.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSupplierAsync(int id, Suppliers supplier)
         {
-            if(id != supplier.Id)
+            if (id != supplier.Id)
                 return BadRequest("ID mismatch.");
-            
-            if(supplier == null)
+
+            if (supplier == null)
                 return BadRequest("Supplier cannot be null.");
 
             var result = await _supplierService.UpdateSupplierAsync(supplier);
-            if(!result.Success)
+            if (!result.Success)
                 return BadRequest(result.Message);
             return Ok(result);
         }
- 
+
         [HttpDelete]
         public async Task<IActionResult> DeleteSupplierAsync(int id)
         {
-            if(id<=0)
+            if (id <= 0)
                 return BadRequest("Invalid ID.");
-            
+
             var result = await _supplierService.DeleteSupplierAsync(id);
 
-            if(!result.Success)
+            if (!result.Success)
                 return BadRequest(result.Message);
-            
+
             return Ok(result);
         }
     }

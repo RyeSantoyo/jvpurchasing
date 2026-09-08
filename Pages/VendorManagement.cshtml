@@ -57,6 +57,7 @@
         let dataTableInstance;
 
         $(document).ready(function () {
+            
             dataTableInstance = $('#vendortbl').DataTable({
                 "order": [[0, "desc"]],
                 "processing": true,
@@ -64,9 +65,15 @@
                 "scrollX": true,
                 "ajax": {
                     "url": "/api/suppliers/vendors",
+                    "headers": {
+                        "Authorization": "Bearer " + localStorage.getItem("jwtToken")
+                    },
                     "dataSrc": "",
                     "error": function (xhr, error, thrown) {
-                        console.error("API Error: ", xhr.status, thrown);
+                        console.error("API Status:", xhr.status);
+                        console.error("API Response:", xhr.responseText);
+                        console.error("API Error:", error);
+                        console.error("API Thrown:", thrown);
                     }
                 },
                 "columns": [

@@ -92,9 +92,9 @@
             this.PONumber = new DevExpress.XtraReports.Parameters.Parameter();
             this.PageHeader = new DevExpress.XtraReports.UI.PageHeaderBand();
             this.ReportFooter = new DevExpress.XtraReports.UI.ReportFooterBand();
+            this.xrLabel10 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel9 = new DevExpress.XtraReports.UI.XRLabel();
             this.TotalAmount = new DevExpress.XtraReports.UI.CalculatedField();
-            this.xrLabel10 = new DevExpress.XtraReports.UI.XRLabel();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
@@ -108,7 +108,7 @@
             this.xrLabel1,
             this.xrLabel7,
             this.xrLabel8});
-            this.TopMargin.HeightF = 203.9722F;
+            this.TopMargin.HeightF = 222.7222F;
             this.TopMargin.Name = "TopMargin";
             // 
             // xrLabel2
@@ -475,6 +475,17 @@
             this.ReportFooter.HeightF = 194.294F;
             this.ReportFooter.Name = "ReportFooter";
             // 
+            // xrLabel10
+            // 
+            this.xrLabel10.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[OrderBy]")});
+            this.xrLabel10.LocationFloat = new DevExpress.Utils.PointFloat(0.0001589457F, 171.294F);
+            this.xrLabel10.Multiline = true;
+            this.xrLabel10.Name = "xrLabel10";
+            this.xrLabel10.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel10.SizeF = new System.Drawing.SizeF(100F, 23F);
+            this.xrLabel10.Text = "xrLabel10";
+            // 
             // xrLabel9
             // 
             this.xrLabel9.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
@@ -492,17 +503,6 @@
             this.TotalAmount.Expression = "Sum([Total])";
             this.TotalAmount.Name = "TotalAmount";
             // 
-            // xrLabel10
-            // 
-            this.xrLabel10.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[OrderBy]")});
-            this.xrLabel10.LocationFloat = new DevExpress.Utils.PointFloat(0.0001589457F, 171.294F);
-            this.xrLabel10.Multiline = true;
-            this.xrLabel10.Name = "xrLabel10";
-            this.xrLabel10.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 96F);
-            this.xrLabel10.SizeF = new System.Drawing.SizeF(100F, 23F);
-            this.xrLabel10.Text = "xrLabel10";
-            // 
             // ViewPODetails
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -518,7 +518,7 @@
             this.DataMember = "ViewPoDetails";
             this.DataSource = this.sqlDataSource1;
             this.Font = new DevExpress.Drawing.DXFont("Arial", 9.75F);
-            this.Margins = new DevExpress.Drawing.DXMargins(52F, 100F, 203.9722F, 296.2353F);
+            this.Margins = new DevExpress.Drawing.DXMargins(52F, 100F, 222.7222F, 296.2353F);
             this.Parameters.AddRange(new DevExpress.XtraReports.Parameters.Parameter[] {
             this.PONumber});
             this.Version = "23.1";
