@@ -29,6 +29,24 @@ namespace jvPo.Application.Services
             if (dto == null)
                 return (false, "Invalid Data", "");
 
+            string poNumberToUse;
+
+            if(dto.isManual && !string.IsNullOrEmpty(dto.PONumber))
+            {
+                poNumberToUse = dto.PONumber.Trim();
+            }
+            else
+            {
+                poNumberToUse = await GeneratePONumberAsync();
+            }
+
+            bool exists = await _context.POs.AnyAsync(po => po.PONumber == poNumberToUse);
+
+            if (exists)
+            {
+                return (false, $"PO Number {poNumberToUse} already exists.", "");
+            }
+
 
             var supplier = await _context.Suppliers.FindAsync(dto.SupplierId);
             var terms = await _context.Terms.FindAsync(dto.TermsId);
@@ -50,13 +68,13 @@ namespace jvPo.Application.Services
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                var poNumber = await GeneratePONumberAsync();
+                //var poNumber = await GeneratePONumberAsync();
                 var newPo = new PO
                 {
                     CompanyId = dto.CompanyId,
                     CompanyCode = company?.CompanyCode ?? string.Empty,
 
-                    PONumber = poNumber,
+                    PONumber = poNumberToUse,
                     PODate = dto.PODate,
 
                     SupplierId = dto.SupplierId,
@@ -77,7 +95,7 @@ namespace jvPo.Application.Services
                     {
                         CompanyId = d.CompanyId,
                         CompanyCode = d.CompanyCode,
-                        PONumber = poNumber,
+                        PONumber = poNumberToUse,
                         Quantity = d.Quantity,
                         Price = d.Price,
                         Unit = d.Unit,
@@ -90,7 +108,7 @@ namespace jvPo.Application.Services
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return (true, $"Order submitted", poNumber);
+                return (true, $"Order submitted", poNumberToUse);
 
             }
             catch (Exception ex)

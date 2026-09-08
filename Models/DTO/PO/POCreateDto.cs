@@ -22,5 +22,7 @@ namespace jvPo.Models.DTO.PO
         public decimal TotalAmount { get; set; }
         public string Remarks { get; set; } = string.Empty;
         public List<PODetailsDTO> PODetails { get; set; } = new List<PODetailsDTO>();
+
+        public bool isManual { get; set; } = false;
     }
 }

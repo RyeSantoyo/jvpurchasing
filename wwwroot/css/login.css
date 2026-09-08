@@ -1,0 +1,296 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f6f9;
+}
+
+
+/* =========================
+   Page
+========================= */
+
+.login-page {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 20px;
+}
+
+
+/* =========================
+   Container
+========================= */
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+}
+
+
+/* =========================
+   Branding
+========================= */
+
+.login-brand {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.brand-icon {
+    width: 64px;
+    height: 64px;
+
+    margin: 0 auto 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: #212529;
+    color: white;
+
+    font-size: 28px;
+}
+
+.login-brand h1 {
+    margin: 0;
+
+    font-size: 25px;
+    font-weight: 700;
+
+    color: #212529;
+}
+
+.login-brand p {
+    margin: 6px 0 0;
+
+    font-size: 14px;
+    color: #6c757d;
+}
+
+
+/* =========================
+   Card
+========================= */
+
+.login-card {
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    padding: 34px;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.06),
+        0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+
+/* =========================
+   Header
+========================= */
+
+.login-header {
+    margin-bottom: 28px;
+}
+
+.login-header h2 {
+    margin: 0;
+
+    font-size: 24px;
+    font-weight: 700;
+
+    color: #212529;
+}
+
+.login-header p {
+    margin: 7px 0 0;
+
+    font-size: 14px;
+
+    color: #6c757d;
+}
+
+
+/* =========================
+   Form
+========================= */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #343a40;
+}
+
+
+/* =========================
+   Input
+========================= */
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper > i {
+    position: absolute;
+
+    left: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #868e96;
+
+    z-index: 2;
+}
+
+.input-wrapper .form-control {
+    height: 48px;
+
+    padding-left: 42px;
+    padding-right: 42px;
+
+    border: 1px solid #dee2e6;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    transition: all 0.2s ease;
+}
+
+.input-wrapper .form-control:focus {
+    border-color: #212529;
+
+    box-shadow: 0 0 0 3px rgba(33, 37, 41, 0.08);
+}
+
+
+/* =========================
+   Password Toggle
+========================= */
+
+.password-toggle {
+    position: absolute;
+
+    right: 12px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    border: none;
+    background: transparent;
+
+    color: #868e96;
+
+    cursor: pointer;
+
+    padding: 5px;
+
+    z-index: 3;
+}
+
+.password-toggle:hover {
+    color: #212529;
+}
+
+
+/* =========================
+   Login Button
+========================= */
+
+.login-button {
+    width: 100%;
+
+    height: 48px;
+
+    margin-top: 8px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #212529;
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.login-button:hover {
+    background: #343a40;
+    color: #ffffff;
+
+    transform: translateY(-1px);
+}
+
+.login-button:active {
+    transform: translateY(0);
+}
+
+
+/* =========================
+   Error
+========================= */
+
+#loginError {
+    font-size: 13px;
+
+    border-radius: 10px;
+}
+
+
+/* =========================
+   Footer
+========================= */
+
+.login-footer {
+    text-align: center;
+
+    margin-top: 24px;
+
+    font-size: 12px;
+
+    color: #868e96;
+}
+
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 480px) {
+
+    .login-page {
+        padding: 25px 16px;
+    }
+
+    .login-card {
+        padding: 26px 22px;
+    }
+
+    .login-brand {
+        margin-bottom: 22px;
+    }
+
+}

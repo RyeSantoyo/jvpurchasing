@@ -526,7 +526,15 @@
 
             function submitPO(){
                 
-                let poNumber = $("#poNumber").val();
+                let poNumber = $("#poNumber").val().trim();
+                let isManual = $("#chkManualPo").is(":checked");
+
+                if(isManual && !poNumber){
+                    alert("Please enter a manual PO number.");
+                    $("#poNumber").focus();
+                    return;
+                }
+
                 let roNumber = $("#roNumber").val();
                 let companyId = $("#companyId").val();
                 let supplierId = $("#supplierId").val();
@@ -577,6 +585,7 @@
                         companyId: parseInt(companyId),
                         companyCode: $("#companyId option:selected").text(),
                         poNumber: poNumber,
+                        isManual: isManual,
                         poDate: orderDate,
                         roNumber: roNumber,                    
                         supplierId: parseInt(supplierId),

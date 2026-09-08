@@ -53,7 +53,12 @@ namespace jvPo.Application.Services
 
         public async Task<string> LoginUserAsync(LoginDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(us => us.Username == dto.Username);
+            var user = await _context.Users
+            .FirstOrDefaultAsync(us =>
+                us.Username == dto.Username &&
+                us.CompanyCode == dto.CompanyCode &&
+                us.IsActive
+            );
 
             if (user == null)
                 throw new Exception("User does not exist");
