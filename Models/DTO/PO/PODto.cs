@@ -26,7 +26,7 @@ namespace jvPo.Models.DTO
         public string Remarks { get; set; } = string.Empty;
         public List<PODetailsDTO> PODetails { get; set; } = new();
 
-                public bool isManual { get; set; } = false;
+        public bool isManual { get; set; } = false;
 
     }
 }

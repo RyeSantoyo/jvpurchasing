@@ -360,7 +360,7 @@ let dataTableInstance;
                         const response = await fetch(`/api/po/printpo/${poNumber}`, {
                             method: "GET",
                             headers: {
-                                "Authorization": "Bearer " + token
+                                'Authorization': 'Bearer' + token
                             }
                         });
 
@@ -462,6 +462,8 @@ let dataTableInstance;
                     // 2. EDIT ACTION (Open modal with current values populated)
             function editOrder(id) {
                 const modalEl = document.getElementById('editModal');
+                const token = localStorage.getItem("jwtToken");
+
                 if (!modalEl) return;
 
                 document.body.appendChild(modalEl);
@@ -470,6 +472,9 @@ let dataTableInstance;
                 $.ajax({
                     url: `/api/po/purchaseorder/${id}`,
                     type: 'GET',
+                    headers:{
+                        'Authorization': 'Bearer ' + token                
+                    },
                     success: function (po) {
                         // Populate Header Inputs
                         $("#editPoId").val(po.id);
@@ -524,6 +529,9 @@ let dataTableInstance;
 
             $.ajax({
                 url: `/api/po/purchaseorder/${id}`,
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem("jwtToken")
+                },
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(payload),
