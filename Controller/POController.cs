@@ -7,11 +7,13 @@ using jvPo.Models;
 using jvPo.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using DevExpress.XtraReports.UI;
+using Microsoft.AspNetCore.Authorization;
 
 namespace jvPo.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Policy = "101")] // Apply the policy to the entire controller
     public class POController : ControllerBase
     {
         private readonly IPurchaseOrder _purchaseOrderService;
