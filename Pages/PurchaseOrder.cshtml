@@ -1,3 +1,4 @@
+
 @page
 @{
     ViewData["Title"] = "JV Purchasing Dashboard";
@@ -6,143 +7,680 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" />
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
 <script src="~/js/global.js"></script>
-<div class="container-fluid mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>JV Purchasing Orders</h2>
-    </div>
- <div class="d-flex justify-content-between align-items-center mb-4">
-        <button class="btn btn-primary" onclick="addNewPo()">
-            <i class="bi bi-plus"></i> Add New Purchase Order
-        </button>
-    </div>
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <table class="table table-striped table-bordered dt-responsive nowrap" id="potable" style="width:100%">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Order ID</th>
-                        <th>PO Number</th>
-                        <th>RO Number</th>
-                        <th>Company Code</th>
-                        <th>Delivery Address</th>
-                        <th>Agreed Terms</th>
-                        <th>Total Amount</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+
+<style>
+    body {
+        background-color: #f5f7fb;
+    }
+
+    .page-wrapper {
+        padding: 24px 0 40px;
+    }
+
+    .page-header {
+        margin-bottom: 24px;
+    }
+
+    .page-title {
+        font-size: 1.65rem;
+        font-weight: 700;
+        color: #212529;
+        margin-bottom: 4px;
+    }
+
+    .page-subtitle {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .dashboard-card {
+        border: 0;
+        border-radius: 16px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+    }
+
+    .dashboard-card-header {
+        background: #fff;
+        border-bottom: 1px solid #edf0f4;
+        padding: 18px 20px;
+    }
+
+    .dashboard-card-header-title {
+        font-weight: 600;
+        margin: 0;
+        color: #212529;
+    }
+
+    .dashboard-card-header-subtitle {
+        color: #6c757d;
+        font-size: 0.82rem;
+        margin-top: 3px;
+    }
+
+    .dashboard-card-body {
+        background: #fff;
+        padding: 20px;
+    }
+
+    .btn-modern {
+        border-radius: 9px;
+        font-weight: 500;
+        padding: 9px 15px;
+    }
+
+    .btn-modern i {
+        margin-right: 5px;
+    }
+
+    .table-card {
+        background: #fff;
+        border-radius: 16px;
+    }
+
+    #potable thead th {
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        padding: 13px 12px;
+        white-space: nowrap;
+    }
+
+    #potable tbody td {
+        padding: 13px 12px;
+        vertical-align: middle;
+        font-size: 0.9rem;
+    }
+
+    #potable tbody tr {
+        transition: background-color 0.15s ease;
+    }
+
+    #potable tbody tr:hover {
+        background-color: #f8fafc;
+    }
+
+    .table-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .section-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #495057;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 8px;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 9px;
+        border-color: #dfe3e8;
+        min-height: 42px;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.08);
+    }
+
+    .input-group .btn {
+        border-radius: 0 9px 9px 0;
+    }
+
+    .modal-content {
+        border: 0;
+        border-radius: 16px;
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+    }
+
+    .modal-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid #edf0f4;
+    }
+
+    .modal-title {
+        font-weight: 600;
+    }
+
+    .modal-body {
+        padding: 22px;
+    }
+
+    .modal-footer {
+        padding: 16px 22px;
+        border-top: 1px solid #edf0f4;
+        background: #fafbfc;
+    }
+
+    .modal-section {
+        margin-top: 22px;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .modal-section h6 {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #343a40;
+        margin: 0;
+    }
+
+    .order-table-wrapper {
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        overflow-x: auto;
+        margin-top: 12px;
+    }
+
+    #orderTable {
+        margin-bottom: 0;
+    }
+
+    #orderTable th {
+        background: #f8f9fa;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    #orderTable td,
+    #orderTable th {
+        padding: 11px 12px;
+        vertical-align: middle;
+    }
+
+    .detail-table {
+        margin-bottom: 0;
+    }
+
+    .detail-table th {
+        width: 38%;
+        font-weight: 600;
+        color: #495057;
+        background: #f8f9fa;
+    }
+
+    .detail-table td {
+        font-weight: 500;
+    }
+
+    .modal-dialog.modal-modern {
+        max-width: 850px;
+    }
+
+    .modal-dialog.modal-view {
+        max-width: 650px;
+    }
+
+    .modal-dialog.modal-edit {
+        max-width: 750px;
+    }
+
+    .action-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .action-bar-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 9px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: #eef5ff;
+        color: #0d6efd;
+    }
+
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #dfe3e8;
+        border-radius: 8px;
+        padding: 7px 11px;
+        margin-left: 6px;
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+        border: 1px solid #dfe3e8;
+        border-radius: 8px;
+        padding: 5px 28px 5px 8px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        border-radius: 7px !important;
+        margin: 0 2px;
+    }
+
+    @* @media (max-width: 768px) {
+        .page-wrapper {
+            padding-top: 15px;
+        }
+
+        .page-title {
+            font-size: 1.35rem;
+        }
+
+        .dashboard-card-body {
+            padding: 12px;
+        }
+
+        .table-toolbar {
+            align-items: stretch;
+        }
+
+        .action-bar {
+            align-items: stretch;
+        } *@
+    }
+</style>
+
+<div class="container-fluid page-wrapper">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="action-bar">
+            <div>
+                <div class="page-title">
+                    <i class="bi bi-receipt-cutoff me-2 text-primary"></i>
+                    JV Purchasing Orders
+                </div>
+                <div class="page-subtitle">
+                    Manage and monitor purchase orders across the organization.
+                </div>
+            </div>
+
+            <div class="action-bar-left">
+                <span class="status-badge">
+                    <i class="bi bi-circle-fill" style="font-size: 6px;"></i>
+                    Purchasing System
+                </span>
+
+                <button class="btn btn-primary btn-modern" onclick="addNewPo()">
+                    <i class="bi bi-plus-lg"></i>
+                    Add New Purchase Order
+                </button>
+            </div>
         </div>
     </div>
-    <div class="d-flex justify-content-between align-items-center mt-3">
-        <button class="btn btn-primary" onclick="refreshTable()">
-            <i class="bi bi-arrow-clockwise"></i> Refresh Data
-        </button>
+
+    <!-- Purchase Order Table -->
+    <div class="card dashboard-card table-card">
+
+        <div class="dashboard-card-header">
+            <div class="table-toolbar">
+                <div>
+                    <h6 class="dashboard-card-header-title">
+                        Purchase Order List
+                    </h6>
+                    <div class="dashboard-card-header-subtitle">
+                        View, edit, print, or delete existing purchase orders.
+                    </div>
+                </div>
+
+                <button class="btn btn-outline-secondary btn-modern" onclick="refreshTable()">
+                    <i class="bi bi-arrow-clockwise"></i>
+                    Refresh Data
+                </button>
+            </div>
+        </div>
+
+        <div class="dashboard-card-body">
+
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered dt-responsive nowrap"
+                       id="potable"
+                       style="width:100%">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>PO Number</th>
+                            <th>RO Number</th>
+                            <th>Company Code</th>
+                            <th>Delivery Address</th>
+                            <th>Agreed Terms</th>
+                            <th>Total Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
     </div>
+
 </div>
 
-<!-- Modal for Creating a New Purchase Order -->
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
-    <div class="modal-dialog">
+
+<!-- ========================================================= -->
+<!-- CREATE PURCHASE ORDER MODAL -->
+<!-- ========================================================= -->
+
+<div class="modal fade"
+     id="myModal"
+     tabindex="-1"
+     aria-labelledby="modalTitle"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-modern">
+
         <div class="modal-content">
+
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Create PO</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div>
+                    <h5 class="modal-title" id="modalTitle">
+                        <i class="bi bi-file-earmark-plus me-2 text-primary"></i>
+                        Create Purchase Order
+                    </h5>
+                    <small class="text-muted">
+                        Enter the required details for the new purchase order.
+                    </small>
+                </div>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
             </div>
 
             <div class="modal-body">
+
                 <form id="createPoForm">
+
+                    <!-- PO / RO -->
+                    <div class="modal-section">
+                        <h6>
+                            <i class="bi bi-hash me-1"></i>
+                            Order Information
+                        </h6>
+                    </div>
+
                     <div class="row g-3">
 
                         <div class="col-md-6">
-                            <label class="form-label" >PO Number</label>
+                            <label class="form-label fw-semibold">PO Number</label>
+
                             <div class="input-group">
-                                <input type="text" id="poNumber" class="form-bg-light form-control" readonly />
-                                <button class="btn btn-outline-secondary" type="button" id="btnRefreshPo">
+
+                                <input type="text"
+                                       id="poNumber"
+                                       class="form-control"
+                                       readonly />
+
+                                <button class="btn btn-outline-secondary"
+                                        type="button"
+                                        id="btnRefreshPo"
+                                        title="Generate another PO number">
+
                                     <i class="bi bi-arrow-clockwise"></i>
+
                                 </button>
+
                             </div>
-                            <div class="form-check mt-1">
-                                <input class="form-check-input" type="checkbox" id="chkManualPo">
-                                <label class="form-check-label text-muted small" for="chkManualPo">
+
+                            <div class="form-check mt-2">
+
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       id="chkManualPo">
+
+                                <label class="form-check-label text-muted small"
+                                       for="chkManualPo">
+
                                     Override with manual PO number
+
                                 </label>
+
                             </div>
                         </div>
+
+
                         <div class="col-md-6">
-                            <label class="form-label" for="roNumber">RO Number</label>
-                            <div class="input-group">
-                            <input type="text" id="roNumber" class="form-bg-light form-control" />
-                            <button class="btn btn-outline-secondary" type="button" id="btnRefreshRo">
-                                <i class="bi bi-arrow-clockwise"></i>
-                            </button>
-                            </div>
-                            <div class="form-check mt-1">
-                            <label class="form-check-label text-muted small" for="chkManualRo">
+
+                            <label class="form-label fw-semibold"
+                                   for="roNumber">
+
+                                RO Number
+
                             </label>
+
+                            <div class="input-group">
+
+                                <input type="text"
+                                       id="roNumber"
+                                       class="form-control" />
+
+                                <button class="btn btn-outline-secondary"
+                                        type="button"
+                                        id="btnRefreshRo"
+                                        title="Refresh RO number">
+
+                                    <i class="bi bi-arrow-clockwise"></i>
+
+                                </button>
+
                             </div>
+
                         </div>
-                    </div>
-
-                    <div class="row g-3 mt-2">
-
-                    <div class="col-md-6">
-                        <label class="form-label"> Company</label>
-                        <select class="form-control" id="companyId">
-                            <option value="">Select Company</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label"> Supplier</label>
-                        <select class="form-control" id="supplierId">
-                            <option value="">Select Supplier</option>
-                        </select>
-                    </div>
 
                     </div>
 
-                    <div class="row g-3 mt-2">
-                        <div class="col-md-6">
-                            <label class="form-label"> Terms</label>
-                            <select class="form-control" id="termsId">
-                                <option value="">Select Applicable Terms</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label"> Delivery Address</label>
-                            <select class="form-control" id="deliveryAddressId">
-                                <option value="">Select Delivery Address</option>
-                            </select>
-                        </div>
+
+                    <!-- Supplier / Company -->
+                    <div class="modal-section">
+                        <h6>
+                            <i class="bi bi-building me-1"></i>
+                            Supplier & Company
+                        </h6>
                     </div>
 
-                     <div class="row g-3 mt-2">
-                        <div class="col-md-6">
-                            <label class="form-label">Order by: </label>
-                            <input type="text" class="form-control" id="orderBy" />
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label"> Requested by: </label>
-                            <input type="text" class="form-control" id="requestedBy" />
-                        </div>
-                    </div>                   
                     <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label"> PO Date</label>
-                        <input type="date" class="form-control" id="orderDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
-                    </div>
 
                         <div class="col-md-6">
-                        <label class="form-label"> RO Date</label>
-                        <input type="date" class="form-control" id="roDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
-                    </div>
+
+                            <label class="form-label fw-semibold">
+                                Company
+                            </label>
+
+                            <select class="form-select"
+                                    id="companyId">
+
+                                <option value="">
+                                    Select Company
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                Supplier
+                            </label>
+
+                            <select class="form-select"
+                                    id="supplierId">
+
+                                <option value="">
+                                    Select Supplier
+                                </option>
+
+                            </select>
+
+                        </div>
+
                     </div>
 
-                    <h6> Order Details </h6>
-                        <table class="table table-responsive" id="orderTable">
+
+                    <!-- Terms / Delivery -->
+                    <div class="modal-section">
+                        <h6>
+                            <i class="bi bi-truck me-1"></i>
+                            Delivery & Terms
+                        </h6>
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                Terms
+                            </label>
+
+                            <select class="form-select"
+                                    id="termsId">
+
+                                <option value="">
+                                    Select Applicable Terms
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                Delivery Address
+                            </label>
+
+                            <select class="form-select"
+                                    id="deliveryAddressId">
+
+                                <option value="">
+                                    Select Delivery Address
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Request Details -->
+                    <div class="modal-section">
+                        <h6>
+                            <i class="bi bi-person-lines-fill me-1"></i>
+                            Request Details
+                        </h6>
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                Order by
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   id="orderBy" />
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                Requested by
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   id="requestedBy" />
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Dates -->
+                    <div class="modal-section">
+                        <h6>
+                            <i class="bi bi-calendar3 me-1"></i>
+                            Order Dates
+                        </h6>
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                PO Date
+                            </label>
+
+                            <input type="date"
+                                   class="form-control"
+                                   id="orderDate"
+                                   value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                RO Date
+                            </label>
+
+                            <input type="date"
+                                   class="form-control"
+                                   id="roDate"
+                                   value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Order Details -->
+                    <div class="modal-section">
+                        <h6>
+                            <i class="bi bi-cart3 me-1"></i>
+                            Order Details
+                        </h6>
+                    </div>
+
+                    <div class="order-table-wrapper">
+
+                        <table class="table"
+                               id="orderTable">
+
                             <thead>
                                 <tr>
                                     <th>Product</th>
@@ -152,167 +690,555 @@
                                     <th>Total</th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+
+                            <tbody>
+                            </tbody>
+
                         </table>
-                            <button type="button" class="btn btn-success" id="btnAddOrder">Add Order</button>
+
+                    </div>
+
+                    <div class="mt-3">
+
+                        <button type="button"
+                                class="btn btn-outline-success btn-modern"
+                                id="btnAddOrder">
+
+                            <i class="bi bi-plus-circle"></i>
+                            Add Order
+
+                        </button>
+
+                    </div>
+
                 </form>
-                <p>This is your ASP.NET Core modal content container.</p>
+
             </div>
+
+
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="submitPO()">Submit PO</button>
+
+                <button type="button"
+                        class="btn btn-light btn-modern"
+                        data-bs-dismiss="modal">
+
+                    Close
+
+                </button>
+
+                <button type="button"
+                        class="btn btn-primary btn-modern"
+                        onclick="submitPO()">
+
+                    <i class="bi bi-check2-circle"></i>
+                    Submit PO
+
+                </button>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
-<!-- Modal for Viewing Purchase Order Details -->
-<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+
+
+<!-- ========================================================= -->
+<!-- VIEW PURCHASE ORDER MODAL -->
+<!-- ========================================================= -->
+
+<div class="modal fade"
+     id="viewModal"
+     tabindex="-1"
+     aria-labelledby="viewModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-view">
+
         <div class="modal-content">
+
             <div class="modal-header bg-info text-white">
-                <h5 class="modal-title" id="viewModalLabel"><i class="bi bi-eye"></i> View Purchase Order</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <div>
+                    <h5 class="modal-title"
+                        id="viewModalLabel">
+
+                        <i class="bi bi-eye me-2"></i>
+                        View Purchase Order
+
+                    </h5>
+
+                    <small class="opacity-75">
+                        Purchase order details
+                    </small>
+                </div>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+
             </div>
+
+
             <div class="modal-body">
-                <table class="table table-bordered">
+
+                <table class="table table-bordered detail-table">
+
                     <tr>
-                        <th style="width: 40%;">Order ID</th>
+                        <th>Order ID</th>
                         <td id="viewPoId"></td>
                     </tr>
+
                     <tr>
                         <th>PO Number</th>
                         <td id="viewPoNumber"></td>
                     </tr>
+
                     <tr>
                         <th>RO Number</th>
                         <td id="viewRoNumber"></td>
                     </tr>
+
                     <tr>
                         <th>Delivery Address</th>
                         <td id="viewDeliveryAddress"></td>
                     </tr>
+
                     <tr>
                         <th>Agreed Terms</th>
                         <td id="viewAgreedTerms"></td>
                     </tr>
+
                     <tr>
                         <th>Total Amount</th>
-                        <td id="viewTotalAmount" class="fw-bold text-success"></td>
+                        <td id="viewTotalAmount"
+                            class="fw-bold text-success">
+                        </td>
                     </tr>
+
                 </table>
+
             </div>
+
+
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onClick="printOrder()">Print</button>
+
+                <button type="button"
+                        class="btn btn-light btn-modern"
+                        data-bs-dismiss="modal">
+
+                    Close
+
+                </button>
+
+                <button type="button"
+                        class="btn btn-primary btn-modern"
+                        onClick="printOrder()">
+
+                    <i class="bi bi-printer me-1"></i>
+                    Print
+
+                </button>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
-<!-- Modal for Editing a Purchase Order -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+
+
+<!-- ========================================================= -->
+<!-- EDIT PURCHASE ORDER MODAL -->
+<!-- ========================================================= -->
+
+<div class="modal fade"
+     id="editModal"
+     tabindex="-1"
+     aria-labelledby="editModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-edit">
+
         <div class="modal-content">
-            <form id="editForm" onsubmit="submitEdit(event)">
-                <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title" id="editModalLabel"><i class="bi bi-pencil-square"></i> Edit Purchase Order</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            <form id="editForm"
+                  onsubmit="submitEdit(event)">
+
+                <div class="modal-header bg-warning">
+
+                    <div>
+                        <h5 class="modal-title"
+                            id="editModalLabel">
+
+                            <i class="bi bi-pencil-square me-2"></i>
+                            Edit Purchase Order
+
+                        </h5>
+
+                        <small class="text-dark opacity-75">
+                            Modify the purchase order information.
+                        </small>
+                    </div>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+
                 </div>
+
+
                 <div class="modal-body">
 
-                        <div class="row g-3">
-                        <input type="hidden" id="editPoId" />
-                        
-                        <div class="col-md-6">
-                            <label for="editPoNumber" class="form-label">PO Number</label>
-                            <input type="text" class="form-label form-control" id="editPoNumber" readonly />
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="editRoNumber" class="form-label">RO Number</label>
-                            <input type="text" class="form-label form-control" id="editRoNumber" readonly />
-                        </div>                    
-                    </div>
                     <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Company</label>
-                            <select class="form-control" id="editCompanyId">
-                                <option value="">Select Company</option>
-                            </select>
-                        </div>
+
+                        <input type="hidden"
+                               id="editPoId" />
+
 
                         <div class="col-md-6">
-                            <label class="form-label">Supplier</label>
-                            <select class="form-control" id="editSupplierId">
-                                <option value="">Select Supplier</option>
-                            </select>
+
+                            <label for="editPoNumber"
+                                   class="form-label fw-semibold">
+
+                                PO Number
+
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   id="editPoNumber"
+                                   readonly />
+
                         </div>
+
+
+                        <div class="col-md-6">
+
+                            <label for="editRoNumber"
+                                   class="form-label fw-semibold">
+
+                                RO Number
+
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   id="editRoNumber"
+                                   readonly />
+
+                        </div>
+
                     </div>
-                    <div class="row g-3 mt-2">
-                        <div class="col-md-6">
-                            <label class="form-label"> Terms</label>
-                            <select class="form-control" id="editAgreedTermsId">
-                                <option value="">Select Applicable Terms</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label"> Delivery Address</label>
-                            <select class="form-control" id="editDeliveryAddressId">
-                                <option value="">Select Delivery Address</option>
-                            </select>
-                        </div>
-                    </div>                    
+
+
+                    <div class="modal-section">
+                        <h6>
+                            <i class="bi bi-building me-1"></i>
+                            Supplier & Company
+                        </h6>
+                    </div>
+
+
                     <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label"> PO Date</label>
-                            <input type="date" class="form-control" id="orderDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
-                        </div>
 
                         <div class="col-md-6">
-                            <label class="form-label"> RO Date</label>
-                            <input type="date" class="form-control" id="roDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+
+                            <label class="form-label fw-semibold">
+                                Company
+                            </label>
+
+                            <select class="form-select"
+                                    id="editCompanyId">
+
+                                <option value="">
+                                    Select Company
+                                </option>
+
+                            </select>
+
                         </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                Supplier
+                            </label>
+
+                            <select class="form-select"
+                                    id="editSupplierId">
+
+                                <option value="">
+                                    Select Supplier
+                                </option>
+
+                            </select>
+
+                        </div>
+
                     </div>
-                    <div class="mb-3">
-                        <label for="editTotalAmount" class="form-label">Total Amount (₱)</label>
-                        <input type="number" step="0.01" class="form-control" id="editTotalAmount" required />
+
+
+                    <div class="modal-section">
+                        <h6>
+                            <i class="bi bi-truck me-1"></i>
+                            Delivery & Terms
+                        </h6>
                     </div>
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                Terms
+                            </label>
+
+                            <select class="form-select"
+                                    id="editAgreedTermsId">
+
+                                <option value="">
+                                    Select Applicable Terms
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                Delivery Address
+                            </label>
+
+                            <select class="form-select"
+                                    id="editDeliveryAddressId">
+
+                                <option value="">
+                                    Select Delivery Address
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-section">
+                        <h6>
+                            <i class="bi bi-calendar3 me-1"></i>
+                            Order Dates
+                        </h6>
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                PO Date
+                            </label>
+
+                            <input type="date"
+                                   class="form-control"
+                                   id="orderDate"
+                                   value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                                   readonly />
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                RO Date
+                            </label>
+
+                            <input type="date"
+                                   class="form-control"
+                                   id="roDate"
+                                   value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                                   readonly />
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="mt-4">
+
+                        <label for="editTotalAmount"
+                               class="form-label fw-semibold">
+
+                            Total Amount (₱)
+
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                ₱
+                            </span>
+
+                            <input type="number"
+                                   step="0.01"
+                                   class="form-control"
+                                   id="editTotalAmount"
+                                   required />
+
+                        </div>
+
+                    </div>
+
                 </div>
+
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-warning">Save Changes</button>
+
+                    <button type="button"
+                            class="btn btn-light btn-modern"
+                            data-bs-dismiss="modal">
+
+                        Cancel
+
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-warning btn-modern">
+
+                        <i class="bi bi-check-lg"></i>
+                        Save Changes
+
+                    </button>
+
                 </div>
+
             </form>
+
         </div>
+
     </div>
+
 </div>
 
-<!-- Modal for Deleting a Purchase Order -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+
+<!-- ========================================================= -->
+<!-- DELETE PURCHASE ORDER MODAL -->
+<!-- ========================================================= -->
+
+<div class="modal fade"
+     id="deleteModal"
+     tabindex="-1"
+     aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered"
+         style="max-width: 500px;">
+
         <div class="modal-content">
+
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deleteModalLabel"><i class="bi bi-trash"></i> Delete Purchase Order</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <div>
+                    <h5 class="modal-title"
+                        id="deleteModalLabel">
+
+                        <i class="bi bi-trash me-2"></i>
+                        Delete Purchase Order
+
+                    </h5>
+
+                    <small class="opacity-75">
+                        This action requires confirmation.
+                    </small>
+                </div>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete Purchase Order <strong id="deletePoNumSpan"></strong>?</p>
-                <p class="text-danger"><small>This action cannot be undone.</small></p>
-                <input type="hidden" id="deletePoId" />
+
+
+            <div class="modal-body text-center py-4">
+
+                <div class="mb-3">
+
+                    <i class="bi bi-exclamation-triangle-fill text-danger"
+                       style="font-size: 3rem;">
+                    </i>
+
+                </div>
+
+                <p class="mb-2">
+                    Are you sure you want to delete Purchase Order
+                    <strong id="deletePoNumSpan"></strong>?
+                </p>
+
+                <p class="text-danger mb-0">
+                    <small>
+                        This action cannot be undone.
+                    </small>
+                </p>
+
+                <input type="hidden"
+                       id="deletePoId" />
+
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" onclick="submitDelete()">Delete</button>
+
+
+            <div class="modal-footer justify-content-center">
+
+                <button type="button"
+                        class="btn btn-light btn-modern"
+                        data-bs-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+                <button type="button"
+                        class="btn btn-danger btn-modern"
+                        onclick="submitDelete()">
+
+                    <i class="bi bi-trash me-1"></i>
+                    Delete
+
+                </button>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
 
 
 @section Scripts {
+
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
     <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
     <script src="~/js/purchaseorder.js"></script>
 }
