@@ -5,6 +5,7 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" />
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
+<script src="~/js/global.js"></script>
 
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -70,6 +71,8 @@
                     },
                     "dataSrc": "",
                     "error": function (xhr, error, thrown) {
+                        @* alert("Error fetching vendor data. Please check the console for details."); *@
+                        notify.error("Error fetching vendor data. Please check the console for details.");
                         console.error("API Status:", xhr.status);
                         console.error("API Response:", xhr.responseText);
                         console.error("API Error:", error);

@@ -28,6 +28,7 @@ namespace jvPo.Controller
         }
 
         [HttpGet("vendors")]
+        
         public async Task<IActionResult> GetSuppliers()
         {
 
