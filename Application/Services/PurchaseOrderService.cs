@@ -395,7 +395,7 @@ namespace jvPo.Application.Services
             return (true, "Success", report);
         }
 
-        public async Task<(bool Success, string Message)> UpdatePurchaseOrderAsync(PODto dto)
+        public async Task<(bool Success, string Message)> UpdatePurchaseOrderAsync(PODto dto, int id)
         {
             if (dto == null)
                 return (false, "No data available.");
