@@ -18,7 +18,7 @@ namespace jvPo.Application.Interface
         Task<object?> GetPOByIdAsync(int id);
         Task<string> GeneratePONumberAsync();
         Task<(bool Success, string Message, string poNumber)> AddPurchaseOrderAsync(PODto dto);
-        Task<(bool Success, string Message)> UpdatePurchaseOrderAsync(PODto dto);
+        Task<(bool Success, string Message)> UpdatePurchaseOrderAsync(PODto dto, int id);
         Task<(bool Success, string Message)> DeletePurchaseOrderAsync(int id);
         Task<IEnumerable<PODetailsDTO>> GetPODetailsAsync(int pageNumber, int pageSize);
         Task<IEnumerable<PODetailsDTO>> GetPODetailsAsyncId(int id);

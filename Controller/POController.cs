@@ -134,5 +134,21 @@ namespace jvPo.Controller
 
             return File(bytes, "application/pdf");
         }
+
+        [HttpPut("updatepo/{id}")]
+        public async Task<IActionResult> UpdatePurchaseOrderAsync(PODto dto, int id)
+        {
+            if (dto == null)
+                return BadRequest("PO is empty.");
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var result = await _purchaseOrderService.UpdatePurchaseOrderAsync(dto, id);
+            if (!result.Success)
+                return BadRequest(result.Message.ToString());
+
+            return Ok(result.Message);
+        }
     }
 }
