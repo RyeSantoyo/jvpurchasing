@@ -398,12 +398,21 @@ namespace jvPo.Application.Services
         public async Task<(bool Success, string Message)> UpdatePurchaseOrderAsync(PODto dto)
         {
             if (dto == null)
-                return (false, "Not available");
+                return (false, "No data available.");
 
             var pod = await _context.POs.FindAsync(dto.POID);
             if (pod == null)
-                return (false, "Not available");
+                return (false, "No data available.");
 
+            pod.CompanyId = dto.CompanyId;
+            pod.SupplierId = dto.SupplierId;
+            pod.DeliveryAddressID = dto.DeliveryAddressId;
+            pod.TermsId = dto.TermsId;
+            pod.TotalAmount = dto.PODetails.Sum(d => d.Quantity * d.Price);
+            pod.RequestedBy = dto.RequestedBy;
+            pod.OrderBy = dto.OrderBy;
+            
+            await _context.SaveChangesAsync();
             return (true, "Success");
         }
 
