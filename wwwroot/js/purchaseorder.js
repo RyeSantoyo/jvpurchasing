@@ -399,8 +399,10 @@ function editOrder(id) {
     if (!modalEl) return;
     document.body.appendChild(modalEl);
 
+
+    //Get PO details from API and populate the edit form
     $.ajax({
-        url: `/api/po/purchaseorder/${id}`,
+        url: `/api/po/purchaseorder/${id}/`,
         type: 'GET',
         headers: { 'Authorization': 'Bearer ' + token },
         success: function (po) {
@@ -441,20 +443,87 @@ function editOrder(id) {
     });
 }
 
+// function submitEdit(event) {
+//     event.preventDefault();
+
+//     const id = $("#editPoId").val();
+//     const payload = {
+//         poid: parseInt(id),
+//         companyId: parseInt($("#editCompanyId").val()),
+//         supplierId: parseInt($("#editSupplierId").val()),
+//         termsId: parseInt($("#editAgreedTermsId").val()),
+//         poNumber: $("#editPoNumber").val(),
+//         deliveryAddressId: parseInt($("#editDeliveryAddressId").val()), // <--- FIX: Pass the ID integer
+//         agreedTerms: $("#editAgreedTermsId option:selected").text(),
+//         totalAmount: parseFloat($("#editTotalAmount").val()),
+//         poDetails: []
+        
+//     };
+
+//     $.ajax({
+//         url: `/api/po/updatepo/${id}`,
+//         headers: {
+//             'Authorization': 'Bearer ' + localStorage.getItem("jwtToken")
+//         },
+//         type: 'PUT',
+//         contentType: 'application/json',
+//         data: JSON.stringify(payload),
+//         success: function (result) {
+//             let editModalEl = document.getElementById('editModal');
+//             let modalInstance = bootstrap.Modal.getInstance(editModalEl);
+//             if(modalInstance) modalInstance.hide();
+
+//             refreshTable();
+//             alert("Purchase Order updated successfully!");
+//         },
+//         error: function (xhr, status, error) {
+//             console.error("Update failed:", xhr.status, error);
+//             alert("Failed to update the purchase order. Check backend connection.");
+//         }
+//     });
+// }
 function submitEdit(event) {
     event.preventDefault();
 
-    const id = $("#editPoId").val();
+    const id = parseInt($("#editPoId").val());
+
+    // 1. Scrape line items from the edit modal table
+    const lineItems = [];
+    $("#editOrderTable tbody tr").each(function () {
+        const $row =$(this);
+        const qty = parseFloat($row.find(".quantityInput").val()) || 0;
+        const prc = parseFloat($row.find(".priceInput").val()) || 0;
+        const prod = $row.find(".product-input").val() || "";
+
+        if (prod && qty > 0 && prc > 0) {
+            lineItems.push({
+                poid: id,
+                description: prod,
+                unit: $row.find(".unitInput").val() || "PCS",
+                quantity: qty,
+                price: prc,
+                total: qty * prc
+            });
+        }
+    });
+
+    // 2. Construct complete payload
     const payload = {
-        poid: parseInt(id),
+        poid: id,
         poNumber: $("#editPoNumber").val(),
-        deliveryAddress: $("#editDeliveryAddressId option:selected").text(),
-        agreedTerms: $("#editAgreedTermsId option:selected").text(),
-        totalAmount: parseFloat($("#editTotalAmount").val())
+        roNumber: $("#editRoNumber").val(),
+        companyId: parseInt($("#editCompanyId").val()) || null,
+        
+        supplierId: parseInt($("#editSupplierId").val()) || null,
+        deliveryAddressId: parseInt($("#editDeliveryAddressId").val()) || null,
+        termsId: parseInt($("#editAgreedTermsId").val()) || null,
+        totalAmount: parseFloat($("#editTotalAmount").val()) || 0,
+        poDetails: lineItems // <--- Sending scraped items prevents total from resetting to 0!
     };
 
+    // 3. Send update request
     $.ajax({
-        url: `/api/po/${id}`,
+        url: `/api/po/updatepo/${id}`,
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem("jwtToken")
         },
@@ -464,7 +533,7 @@ function submitEdit(event) {
         success: function (result) {
             let editModalEl = document.getElementById('editModal');
             let modalInstance = bootstrap.Modal.getInstance(editModalEl);
-            if(modalInstance) modalInstance.hide();
+            if (modalInstance) modalInstance.hide();
 
             refreshTable();
             alert("Purchase Order updated successfully!");
@@ -475,7 +544,6 @@ function submitEdit(event) {
         }
     });
 }
-
 function confirmDelete(id, poNum) {
     $("#deletePoId").val(id);
     $("#deletePoNumSpan").text(poNum);
